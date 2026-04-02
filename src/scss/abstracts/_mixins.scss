@@ -1,0 +1,18 @@
+@use 'variables' as *;
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// Responsive breakpoints
+@mixin respond($size) {
+  @if $size == mobile {
+    @media (max-width: $breakpoint-mobile) { @content; }
+  } @else if $size == tablet {
+    @media (max-width: $breakpoint-tablet) { @content; }
+  } @else if $size == desktop {
+    @media (max-width: $breakpoint-desktop) { @content; }
+  }
+}

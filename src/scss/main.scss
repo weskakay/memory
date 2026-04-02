@@ -1,1 +1,10 @@
-// 7-1 SCSS Architecture — imports will be added as partials are created
+// Abstracts
+@use 'abstracts/variables';
+@use 'abstracts/mixins';
+
+// Base
+@use 'base/reset';
+@use 'base/typography';
+
+// Layout
+@use 'layout/container';
