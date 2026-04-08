@@ -1,0 +1,6 @@
+{
+  "name": "Memory Game",
+  "image": "mcr.microsoft.com/devcontainers/node:20",
+  "forwardPorts": [5173],
+  "postCreateCommand": "npm install"
+}
