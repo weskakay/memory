@@ -1,15 +1,27 @@
-// Colors
-$bg-dark: #2f3031;
+// Backgrounds
+$bg-dark: #303131;
 $bg-light: #ffffff;
+
+// Text
 $text-light: #ffffff;
 $text-dark: #303131;
+
+// Accent
 $accent: #f0ea6e;
 $accent-hover: #e6e05a;
+
+// Functional
 $muted: #f5f5f5;
 
 // Player colors
 $player-blue: #2196f3;
 $player-orange: #ff9800;
+
+// Card theme colors
+$card-coding: #26c6da;
+$card-gaming: #e91e8c;
+$card-da-project: #43a047;
+$card-food: #ff9800;
 
 // Typography
 $font-heading: 'Red Rose', cursive;
@@ -26,6 +38,7 @@ $spacing-xl: 3rem;
 $radius-sm: 4px;
 $radius-md: 8px;
 $radius-lg: 16px;
+$radius-xl: 24px;
 
 // Breakpoints
 $breakpoint-mobile: 600px;

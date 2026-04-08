@@ -6,8 +6,6 @@
 @use 'base/reset';
 @use 'base/typography';
 
-// Layout
-@use 'layout/container';
-
 // Pages
 @use 'pages/home';
+@use 'pages/settings';

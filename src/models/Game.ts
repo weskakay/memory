@@ -1,4 +1,4 @@
-import { GameConfig, GameResult } from '../types/types';
+import type { GameConfig, GameResult } from '../types/types';
 import { Board } from './Board';
 import { Player } from './Player';
 

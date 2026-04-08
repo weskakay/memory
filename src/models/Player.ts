@@ -1,4 +1,4 @@
-import { PlayerColor } from '../types/types';
+import type { PlayerColor } from '../types/types';
 
 export class Player {
   readonly name: string;

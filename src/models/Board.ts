@@ -1,4 +1,4 @@
-import { BoardSize, ThemeName } from '../types/types';
+import type { BoardSize, ThemeName } from '../types/types';
 import { Card } from './Card';
 
 const THEME_EMOJIS: Record<ThemeName, string[]> = {

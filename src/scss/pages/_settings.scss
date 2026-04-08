@@ -1,0 +1,261 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.settings {
+  min-height: 100vh;
+  background: $bg-light;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  @include respond(tablet) {
+    grid-template-columns: 1fr;
+  }
+
+  &__left {
+    padding: $spacing-xl $spacing-lg;
+    display: flex;
+    flex-direction: column;
+    gap: 54px;
+
+    @include respond(mobile) {
+      padding: $spacing-lg $spacing-md;
+      gap: $spacing-lg;
+    }
+  }
+
+  &__title {
+    display: inline-block;
+    font-family: $font-heading;
+    font-size: 64px;
+    color: $text-dark;
+    line-height: 1;
+
+    @include respond(mobile) {
+      font-size: 40px;
+    }
+  }
+
+  &__title-underline {
+    display: block;
+    width: 250px;
+    height: 18px;
+    color: $accent;
+    margin-top: 6px;
+
+    @include respond(mobile) {
+      width: 180px;
+    }
+  }
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__group-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__group-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+  }
+
+  &__group-title {
+    font-family: $font-body;
+    font-size: 24px;
+    font-weight: 700;
+    color: $text-dark;
+  }
+
+  &__options {
+    list-style: none;
+    padding: 0 0 0 44px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__option {
+    &-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: $font-body;
+      font-size: 20px;
+      color: $text-dark;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    input[type='radio'] {
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border: 2px solid #303131;
+      border-radius: 50%;
+      margin: 0;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: border-color 0.2s ease, background 0.2s ease;
+
+      &:checked {
+        background: radial-gradient(circle, $text-dark 35%, transparent 45%);
+      }
+    }
+
+    &-arrow {
+      display: inline-flex;
+      align-items: center;
+      width: 60px;
+      height: 18px;
+      color: $accent;
+      flex-shrink: 0;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    &-label:has(input:checked) {
+      .settings__option-arrow {
+        opacity: 1;
+      }
+
+      .settings__option-text {
+        font-weight: 700;
+      }
+    }
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $spacing-md;
+    padding-top: $spacing-md;
+    border-top: 1px solid #e0e0e0;
+    margin-top: auto;
+  }
+
+  &__steps {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    flex-wrap: wrap;
+  }
+
+  &__step {
+    font-family: $font-body;
+    font-size: 14px;
+    color: #909090;
+
+    &:not(:last-child)::after {
+      content: '/';
+      margin-left: $spacing-md;
+      color: $accent;
+      font-weight: 700;
+    }
+  }
+
+  &__start {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-xs;
+    background: $accent;
+    color: $text-dark;
+    font-family: $font-heading;
+    font-weight: 700;
+    font-size: 18px;
+    padding: 10px 22px;
+    border-radius: $radius-sm;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: $accent-hover;
+    }
+  }
+
+  &__start-icon {
+    width: 20px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  &__right {
+    background: #f5f5f5;
+    @include flex-center;
+    padding: $spacing-lg $spacing-md;
+
+    @include respond(tablet) {
+      display: none;
+    }
+  }
+
+  &__preview {
+    width: 340px;
+    padding: $spacing-md;
+    border-radius: $radius-lg;
+    background: var(--preview-bg, #ebebeb);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    transition: background 0.3s ease;
+  }
+
+  &__preview-cards {
+    position: relative;
+    height: 240px;
+  }
+
+  &__preview-card {
+    position: absolute;
+    width: 130px;
+    height: 170px;
+    border-radius: $radius-lg;
+    @include flex-center;
+    transition: background 0.3s ease;
+
+    &--bottom {
+      top: 10px;
+      left: 30px;
+      transform: rotate(-8deg);
+      background: var(--card-color);
+      filter: brightness(0.9);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
+    }
+
+    &--top {
+      bottom: 10px;
+      right: 30px;
+      transform: rotate(5deg);
+      background: #ffffff;
+      box-shadow: 0 12px 22px rgba(0, 0, 0, 0.22);
+    }
+  }
+
+  &__preview-card-icon {
+    width: 56%;
+    height: 56%;
+    @include flex-center;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    &--back {
+      color: rgba(255, 255, 255, 0.55);
+    }
+
+    &--front {
+      color: var(--card-color);
+    }
+  }
+}

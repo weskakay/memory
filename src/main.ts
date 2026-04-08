@@ -1,5 +1,7 @@
 import './scss/main.scss';
 import { renderHome } from './views/HomeView';
+import { renderSettings } from './views/SettingsView';
+import type { GameConfig } from './types/types';
 
 const app = document.getElementById('app');
 if (!app) throw new Error('App container #app not found');
@@ -13,7 +15,13 @@ function showHome(): void {
 }
 
 function showSettings(): void {
-  appContainer.innerHTML = '<h1 style="color: white; padding: 2rem;">Settings — coming in Commit 5</h1>';
+  renderSettings(appContainer, (config: GameConfig) => {
+    showGame(config);
+  });
+}
+
+function showGame(_config: GameConfig): void {
+  appContainer.innerHTML = '<div style="min-height:100vh;background:#303131;"></div>';
 }
 
 showHome();
