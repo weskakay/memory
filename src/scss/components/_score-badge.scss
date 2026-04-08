@@ -1,0 +1,43 @@
+@use '../abstracts/variables' as *;
+
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: $font-body;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--player-color);
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--player-color);
+
+    svg {
+      display: block;
+      width: auto;
+      height: 24px;
+    }
+  }
+
+  &__name {
+    color: var(--player-color);
+  }
+
+  &__num {
+    color: var(--player-color);
+    font-family: $font-heading;
+    font-size: 22px;
+    margin-left: 4px;
+  }
+
+  &--blue {
+    --player-color: var(--theme-player-blue, #2bb1ff);
+  }
+
+  &--orange {
+    --player-color: var(--theme-player-orange, #f58e39);
+  }
+}

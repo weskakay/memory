@@ -7,18 +7,128 @@ const THEME_LABELS: Record<ThemeName, string> = {
   foods: 'Foods theme',
 };
 
-const THEME_COLORS: Record<ThemeName, string> = {
-  coding: '#26c6da',
-  gaming: '#e91e8c',
-  daprojects: '#43a047',
-  foods: '#ff9800',
-};
+interface PreviewTheme {
+  bg: string;
+  headerBg: string;
+  scoreBoxBg: string;
+  playerBlue: string;
+  playerOrange: string;
+  bodyText: string;
+  cardBack: string;
+  cardBackIconColor: string;
+  cardBackRotate: string;
+  cardFront: string;
+  cardFrontRotate: string;
+  cardWidth: string;
+  cardAspect: string;
+  cardRadius: string;
+  cardIconColor: string;
+  cardIconSize: string;
+  cardFrontImage: string;
+  exitBg: string;
+  exitBorder: string;
+  exitText: string;
+  exitIconColor: string;
+  tagType: 'chevron' | 'pawn';
+}
 
-const PREVIEW_BG: Record<ThemeName, string> = {
-  coding: '#cce5e9',
-  gaming: '#1e3a5f',
-  daprojects: '#cfe7d4',
-  foods: '#f5e6d3',
+const PREVIEW_THEME: Record<ThemeName, PreviewTheme> = {
+  coding: {
+    bg: 'linear-gradient(135deg, #303131 30%, #6d6d6d)',
+    headerBg: 'rgba(77, 213, 188, 0.2)',
+    scoreBoxBg: 'rgba(134, 233, 214, 0.3)',
+    playerBlue: '#2bb1ff',
+    playerOrange: '#f58e39',
+    bodyText: '#ffffff',
+    cardBack: 'linear-gradient(155deg, #4dd5bc, #286f62)',
+    cardBackIconColor: 'rgba(255, 255, 255, 0.4)',
+    cardBackRotate: '-11deg',
+    cardFront: '#e8f3f0',
+    cardFrontRotate: '11deg',
+    cardWidth: '38%',
+    cardAspect: '1',
+    cardRadius: '4px',
+    cardIconColor: '#de4c36',
+    cardIconSize: '48%',
+    cardFrontImage: 'none',
+    exitBg: 'rgba(77, 213, 188, 0.2)',
+    exitBorder: '#4dd5bc',
+    exitText: '#ffffff',
+    exitIconColor: '#ffffff',
+    tagType: 'chevron',
+  },
+  gaming: {
+    bg: 'linear-gradient(135deg, #294f60, #4d7a8f)',
+    headerBg: 'rgba(253, 150, 201, 0.2)',
+    scoreBoxBg: '#ffffff',
+    playerBlue: '#097fc5',
+    playerOrange: '#ea6900',
+    bodyText: '#ffffff',
+    cardBack: 'linear-gradient(120deg, #ed1b76, #0a2835)',
+    cardBackIconColor: 'rgba(255, 255, 255, 0.45)',
+    cardBackRotate: '-7.25deg',
+    cardFront: '#f6f1f3',
+    cardFrontRotate: '-5.42deg',
+    cardWidth: '37%',
+    cardAspect: '170 / 220',
+    cardRadius: '19px',
+    cardIconColor: '#e91e8c',
+    cardIconSize: '85%',
+    cardFrontImage: 'url(/gaming-dice.png)',
+    exitBg: 'rgba(237, 27, 118, 0.08)',
+    exitBorder: '#e71c4f',
+    exitText: '#ffffff',
+    exitIconColor: '#e71c4f',
+    tagType: 'pawn',
+  },
+  daprojects: {
+    bg: 'linear-gradient(135deg, #ffffff, #f0f3f4)',
+    headerBg: '#f0f3f4',
+    scoreBoxBg: '#ffffff',
+    playerBlue: '#097fc5',
+    playerOrange: '#ea6900',
+    bodyText: '#1e7594',
+    cardBack: 'linear-gradient(155deg, #2bb1ff, #1e7594)',
+    cardBackIconColor: 'rgba(255, 255, 255, 0.4)',
+    cardBackRotate: '0deg',
+    cardFront: '#f0f4f5',
+    cardFrontRotate: '0deg',
+    cardWidth: '38%',
+    cardAspect: '1',
+    cardRadius: '4px',
+    cardIconColor: '#1e7594',
+    cardIconSize: '78%',
+    cardFrontImage: 'none',
+    exitBg: '#bfe5f2',
+    exitBorder: 'transparent',
+    exitText: '#1e7594',
+    exitIconColor: '#1e7594',
+    tagType: 'pawn',
+  },
+  foods: {
+    bg: 'linear-gradient(135deg, #ffffff, #fdf6ee)',
+    headerBg: '#f0e5d9',
+    scoreBoxBg: '#ffffff',
+    playerBlue: '#097fc5',
+    playerOrange: '#ea6900',
+    bodyText: '#a45212',
+    cardBack: 'linear-gradient(155deg, #ffb74d, #f3832d)',
+    cardBackIconColor: 'rgba(255, 255, 255, 0.45)',
+    cardBackRotate: '0deg',
+    cardFront: '#f7e6d5',
+    cardFrontRotate: '0deg',
+    cardWidth: '38%',
+    cardAspect: '1',
+    cardRadius: '4px',
+    cardIconColor: '#a45212',
+    cardIconSize: '80%',
+    cardFrontImage: 'url(/foods-wrap.png)',
+    exitBg: '#fff9f2',
+    exitBorder: '#f3832d',
+    exitText: '#f3832d',
+    exitIconColor: '#f3832d',
+    tagType: 'pawn',
+  },
 };
 
 const SIZE_LABELS: Record<string, string> = {
@@ -53,6 +163,12 @@ const OPTION_ARROW = `
   </svg>
 `;
 
+const ICON_CARDS = `
+  <svg class="settings__group-icon settings__group-icon--size" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M2.66667 22.4444L1.53333 21.9778C0.844444 21.6889 0.383333 21.1889 0.15 20.4778C-0.0833333 19.7667 -0.0444444 19.0667 0.266667 18.3778L2.66667 13.1778V22.4444ZM8 25.3778C7.26667 25.3778 6.63889 25.1167 6.11667 24.5944C5.59444 24.0722 5.33333 23.4444 5.33333 22.7111V14.7111L8.86667 24.5111C8.93333 24.6667 9 24.8167 9.06667 24.9611C9.13333 25.1056 9.22222 25.2444 9.33333 25.3778H8ZM14.8667 25.2444C14.1556 25.5111 13.4667 25.4778 12.8 25.1444C12.1333 24.8111 11.6667 24.2889 11.4 23.5778L5.46667 7.31111C5.2 6.6 5.22222 5.90556 5.53333 5.22778C5.84444 4.55 6.35556 4.08889 7.06667 3.84444L17.1333 0.177778C17.8444 -0.0888889 18.5333 -0.0555556 19.2 0.277778C19.8667 0.611111 20.3333 1.13333 20.6 1.84444L26.5333 18.1111C26.8 18.8222 26.7778 19.5167 26.4667 20.1944C26.1556 20.8722 25.6444 21.3333 24.9333 21.5778L14.8667 25.2444ZM12 9.37778C12.3778 9.37778 12.6944 9.25 12.95 8.99445C13.2056 8.73889 13.3333 8.42222 13.3333 8.04445C13.3333 7.66667 13.2056 7.35 12.95 7.09444C12.6944 6.83889 12.3778 6.71111 12 6.71111C11.6222 6.71111 11.3056 6.83889 11.05 7.09444C10.7944 7.35 10.6667 7.66667 10.6667 8.04445C10.6667 8.42222 10.7944 8.73889 11.05 8.99445C11.3056 9.25 11.6222 9.37778 12 9.37778ZM13.9333 22.7111L24 19.0444L18.0667 2.71111L8 6.37778L13.9333 22.7111Z" fill="#0635C9"/>
+  </svg>
+`;
+
 const ICON_SMART_DISPLAY = `
   <svg class="settings__start-icon" viewBox="0 0 20 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <rect x="1" y="1" width="18" height="14" rx="2"/>
@@ -60,24 +176,93 @@ const ICON_SMART_DISPLAY = `
   </svg>
 `;
 
-const PREVIEW_BACK_ICON = `
-  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-    <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>
-  </svg>
-`;
-
 const PREVIEW_FRONT_ICONS: Record<ThemeName, string> = {
-  coding: `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>`,
-  gaming: `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 3H5c-1.11 0-2 .89-2 2v14c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zM7.5 18C6.67 18 6 17.33 6 16.5S6.67 15 7.5 15s1.5.67 1.5 1.5S8.33 18 7.5 18zm0-9C6.67 9 6 8.33 6 7.5S6.67 6 7.5 6 9 6.67 9 7.5 8.33 9 7.5 9zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm0-9c-.83 0-1.5-.67-1.5-1.5S15.67 6 16.5 6s1.5.67 1.5 1.5S17.33 9 16.5 9z"/></svg>`,
-  daprojects: `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>`,
-  foods: `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg>`,
+  coding: `<svg viewBox="0 0 89 89" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M87.5035 48.7181L56.5497 2.56764C54.7685 -0.0900319 51.1675 -0.799866 48.5081 0.982482L38.9243 7.4101L47.0781 19.5676C49.5953 19.2353 52.1961 20.3038 53.7065 22.5558C55.2235 24.8217 55.2166 27.6558 53.9331 29.8624L61.7911 41.5793C64.3198 41.2303 66.9479 42.2966 68.4657 44.5637C70.5881 47.7268 69.7439 52.0091 66.5796 54.1319C63.4145 56.255 59.1323 55.4108 57.0083 52.2452C55.4125 49.8631 55.4968 46.8465 56.9861 44.5956L49.6579 33.669L44.9221 57.6883C45.5193 58.1459 46.0384 58.6972 46.4594 59.3207C48.5817 62.4839 47.7375 66.7665 44.5728 68.8914C41.408 71.013 37.1237 70.1685 35.0046 67.0053C32.883 63.8383 33.7271 59.5561 36.8911 57.435C37.6494 56.9261 38.5011 56.5726 39.3969 56.3949L44.1758 32.1515C43.4128 31.6492 42.7586 30.9986 42.2521 30.2383C40.6437 27.8437 40.7414 24.8103 42.2522 22.5536L34.2147 10.5681L2.56913 31.7906C-0.0902546 33.575 -0.800157 37.1764 0.983428 39.8349L31.9378 85.9862C33.7196 88.6444 37.32 89.3541 39.98 87.5715L85.9173 56.7631C88.5758 54.9795 89.2865 51.3761 87.5035 48.7181Z"/></svg>`,
+  gaming: '',
+  daprojects: `<svg viewBox="53 38 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M133 68.9926V108.444H53V68.9926C57.883 68.9926 60.4378 71.5852 62.3037 73.4771C63.9007 75.0971 64.6178 75.7541 66.3333 75.7541C68.0489 75.7541 68.7652 75.0971 70.3622 73.4771C72.2281 71.5845 74.783 68.9926 79.6659 68.9926C84.5489 68.9926 87.1044 71.5852 88.9704 73.4771C90.5674 75.0971 91.2837 75.7541 92.9993 75.7541C94.7148 75.7541 95.4311 75.0971 97.0281 73.4771C98.8941 71.5845 101.45 68.9926 106.333 68.9926C111.217 68.9926 113.772 71.5852 115.637 73.4763C117.235 75.0971 117.951 75.7541 119.667 75.7541C121.382 75.7541 122.099 75.0971 123.696 73.4763C125.561 71.5845 128.117 68.9926 133 68.9926Z" fill="#3CC2D8"/><path d="M64.7034 98.3704C68.5552 89.5556 71.8397 80.5052 70.2449 71.3333C69.5078 67.0993 68.6967 62.9333 67.8086 59.0489L74.439 52.803L73.7723 52.7096L65.8982 51.6008C64.2856 46.063 62.473 41.6674 60.4619 39.3496C60.4619 39.3496 73.0027 35.9904 87.2427 39.8719C88.1177 40.1099 88.9997 40.3773 89.8886 40.6741C101.119 44.4252 112.975 52.9741 120.325 71.3407C122.297 76.2637 125.518 86.7407 125.518 96.1482" fill="#57AEC3"/><path opacity="0.07" d="M125.518 96.1481H113.444C113.444 86.7407 110.223 76.2637 108.251 71.3385C100.901 52.9741 89.0451 44.4252 77.8147 40.6741C76.9298 40.3778 76.0478 40.1104 75.1688 39.8718C72.4087 39.1244 69.5926 38.6019 66.748 38.3096C71.7532 37.7963 79.2288 37.6874 87.2429 39.8718C88.1179 40.1099 88.9999 40.3773 89.8888 40.6741C101.119 44.4252 112.975 52.9741 120.325 71.3407C122.297 76.2637 125.518 86.7407 125.518 96.1481Z" fill="black"/><path d="M133 81.9556V113.111H53V81.9556C57.883 81.9556 60.4378 84.5482 62.3037 86.44C63.9007 88.06 64.6178 88.717 66.3333 88.717C68.0489 88.717 68.7652 88.06 70.3622 86.44C72.2281 84.5474 74.783 81.9556 79.6659 81.9556C84.5489 81.9556 87.1044 84.5482 88.9704 86.44C90.5674 88.06 91.2837 88.717 92.9993 88.717C94.7148 88.717 95.4311 88.06 97.0281 86.44C98.8941 84.5474 101.45 81.9556 106.333 81.9556C111.217 81.9556 113.772 84.5482 115.637 86.4393C117.235 88.06 117.951 88.717 119.667 88.717C121.382 88.717 122.099 88.06 123.696 86.4393C125.561 84.5474 128.117 81.9556 133 81.9556Z" fill="#315FAD"/><path d="M133 99.7333V112.074C133 113.646 132.376 115.153 131.264 116.264C130.153 117.376 128.646 118 127.074 118H58.9259C57.3543 118 55.847 117.376 54.7357 116.264C53.6243 115.153 53 113.646 53 112.074V99.7333C57.883 99.7333 60.4378 102.326 62.3037 104.218C63.9007 105.838 64.6178 106.495 66.3333 106.495C68.0489 106.495 68.7652 105.838 70.3622 104.218C72.2281 102.325 74.783 99.7333 79.6659 99.7333C84.5489 99.7333 87.1044 102.326 88.9704 104.218C90.5674 105.838 91.2837 106.495 92.9993 106.495C94.7148 106.495 95.4311 105.838 97.0281 104.218C98.8941 102.325 101.45 99.7333 106.333 99.7333C111.217 99.7333 113.772 102.326 115.637 104.217C117.235 105.838 117.951 106.495 119.667 106.495C121.382 106.495 122.099 105.838 123.696 104.217C125.561 102.325 128.117 99.7333 133 99.7333Z" fill="#2F318D"/></svg>`,
+  foods: '',
 };
 
-const ICON_CARDS = `
-  <svg class="settings__group-icon settings__group-icon--size" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M2.66667 22.4444L1.53333 21.9778C0.844444 21.6889 0.383333 21.1889 0.15 20.4778C-0.0833333 19.7667 -0.0444444 19.0667 0.266667 18.3778L2.66667 13.1778V22.4444ZM8 25.3778C7.26667 25.3778 6.63889 25.1167 6.11667 24.5944C5.59444 24.0722 5.33333 23.4444 5.33333 22.7111V14.7111L8.86667 24.5111C8.93333 24.6667 9 24.8167 9.06667 24.9611C9.13333 25.1056 9.22222 25.2444 9.33333 25.3778H8ZM14.8667 25.2444C14.1556 25.5111 13.4667 25.4778 12.8 25.1444C12.1333 24.8111 11.6667 24.2889 11.4 23.5778L5.46667 7.31111C5.2 6.6 5.22222 5.90556 5.53333 5.22778C5.84444 4.55 6.35556 4.08889 7.06667 3.84444L17.1333 0.177778C17.8444 -0.0888889 18.5333 -0.0555556 19.2 0.277778C19.8667 0.611111 20.3333 1.13333 20.6 1.84444L26.5333 18.1111C26.8 18.8222 26.7778 19.5167 26.4667 20.1944C26.1556 20.8722 25.6444 21.3333 24.9333 21.5778L14.8667 25.2444ZM12 9.37778C12.3778 9.37778 12.6944 9.25 12.95 8.99445C13.2056 8.73889 13.3333 8.42222 13.3333 8.04445C13.3333 7.66667 13.2056 7.35 12.95 7.09444C12.6944 6.83889 12.3778 6.71111 12 6.71111C11.6222 6.71111 11.3056 6.83889 11.05 7.09444C10.7944 7.35 10.6667 7.66667 10.6667 8.04445C10.6667 8.42222 10.7944 8.73889 11.05 8.99445C11.3056 9.25 11.6222 9.37778 12 9.37778ZM13.9333 22.7111L24 19.0444L18.0667 2.71111L8 6.37778L13.9333 22.7111Z" fill="#0635C9"/>
-  </svg>
-`;
+const PREVIEW_BACK_MASK = `<span class="settings__preview-back-mask"></span>`;
+
+const PREVIEW_PAWN_SMALL = `<svg viewBox="0 0 22 27" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M2.66667 26.6667C1.93333 26.6667 1.30556 26.4056 0.783333 25.8833C0.261111 25.3611 0 24.7333 0 24V21.3667C0 20.9222 0.1 20.5111 0.3 20.1333C0.5 19.7556 0.766667 19.4333 1.1 19.1667C2.63333 17.9222 3.78333 16.6667 4.55 15.4C5.31667 14.1333 5.85556 13 6.16667 12H4C3.62222 12 3.30556 11.8722 3.05 11.6167C2.79444 11.3611 2.66667 11.0444 2.66667 10.6667C2.66667 10.2889 2.79444 9.97222 3.05 9.71667C3.30556 9.46111 3.62222 9.33333 4 9.33333H5.66667C5.35556 8.84444 5.11111 8.32222 4.93333 7.76667C4.75556 7.21111 4.66667 6.62222 4.66667 6C4.66667 4.33333 5.25 2.91667 6.41667 1.75C7.58333 0.583333 9 0 10.6667 0C12.3333 0 13.75 0.583333 14.9167 1.75C16.0833 2.91667 16.6667 4.33333 16.6667 6C16.6667 6.62222 16.5778 7.21111 16.4 7.76667C16.2222 8.32222 15.9778 8.84444 15.6667 9.33333H17.3333C17.7111 9.33333 18.0278 9.46111 18.2833 9.71667C18.5389 9.97222 18.6667 10.2889 18.6667 10.6667C18.6667 11.0444 18.5389 11.3611 18.2833 11.6167C18.0278 11.8722 17.7111 12 17.3333 12H15.1667C15.4778 13 16.0167 14.1333 16.7833 15.4C17.55 16.6667 18.7 17.9222 20.2333 19.1667C20.5667 19.4333 20.8333 19.7556 21.0333 20.1333C21.2333 20.5111 21.3333 20.9222 21.3333 21.3667V24C21.3333 24.7333 21.0722 25.3611 20.55 25.8833C20.0278 26.4056 19.4 26.6667 18.6667 26.6667H2.66667ZM2.66667 24H18.6667V21.3333C16.6222 19.7333 15.1444 18.0833 14.2333 16.3833C13.3222 14.6833 12.7111 13.2222 12.4 12H8.93333C8.62222 13.2222 8.01111 14.6833 7.1 16.3833C6.18889 18.0833 4.71111 19.7333 2.66667 21.3333V24ZM10.6667 9.33333C11.6 9.33333 12.3889 9.01111 13.0333 8.36667C13.6778 7.72222 14 6.93333 14 6C14 5.06667 13.6778 4.27778 13.0333 3.63333C12.3889 2.98889 11.6 2.66667 10.6667 2.66667C9.73333 2.66667 8.94444 2.98889 8.3 3.63333C7.65556 4.27778 7.33333 5.06667 7.33333 6C7.33333 6.93333 7.65556 7.72222 8.3 8.36667C8.94444 9.01111 9.73333 9.33333 10.6667 9.33333Z"/></svg>`;
+
+function previewTag(tagType: 'chevron' | 'pawn', color: 'blue' | 'orange'): string {
+  const shapeClass = tagType === 'pawn' ? 'settings__preview-tag--pawn' : 'settings__preview-tag--chevron';
+  const colorClass = `settings__preview-tag--${color}`;
+  const inner = tagType === 'pawn' ? PREVIEW_PAWN_SMALL : '';
+  return `<span class="settings__preview-tag ${shapeClass} ${colorClass}">${inner}</span>`;
+}
+
+function renderPreview(theme: ThemeName): string {
+  const t = PREVIEW_THEME[theme];
+  const previewStyle = [
+    `--preview-bg: ${t.bg}`,
+    `--preview-header-bg: ${t.headerBg}`,
+    `--preview-score-box-bg: ${t.scoreBoxBg}`,
+    `--preview-player-blue: ${t.playerBlue}`,
+    `--preview-player-orange: ${t.playerOrange}`,
+    `--preview-body-text: ${t.bodyText}`,
+    `--preview-card-back: ${t.cardBack}`,
+    `--preview-card-back-icon: ${t.cardBackIconColor}`,
+    `--preview-card-back-rotate: ${t.cardBackRotate}`,
+    `--preview-card-front: ${t.cardFront}`,
+    `--preview-card-front-rotate: ${t.cardFrontRotate}`,
+    `--preview-card-width: ${t.cardWidth}`,
+    `--preview-card-aspect: ${t.cardAspect}`,
+    `--preview-card-radius: ${t.cardRadius}`,
+    `--preview-card-icon: ${t.cardIconColor}`,
+    `--preview-icon-size: ${t.cardIconSize}`,
+    `--preview-card-image: ${t.cardFrontImage}`,
+    `--preview-exit-bg: ${t.exitBg}`,
+    `--preview-exit-border: ${t.exitBorder}`,
+    `--preview-exit-text: ${t.exitText}`,
+    `--preview-exit-icon: ${t.exitIconColor}`,
+  ].join('; ');
+
+  const blueTag = previewTag(t.tagType, 'blue');
+  const orangeTag = previewTag(t.tagType, 'orange');
+  const isCodingOrder = theme === 'coding';
+  const firstTag = isCodingOrder ? blueTag : orangeTag;
+  const firstLabel = isCodingOrder ? 'Blue' : 'Orange';
+  const firstColor = isCodingOrder ? 'blue' : 'orange';
+  const secondTag = isCodingOrder ? orangeTag : blueTag;
+  const secondLabel = isCodingOrder ? 'Orange' : 'Blue';
+  const secondColor = isCodingOrder ? 'orange' : 'blue';
+
+  return `
+    <div class="settings__preview" style="${previewStyle}">
+      <div class="settings__preview-header">
+        <div class="settings__preview-scores-box">
+          ${firstTag}
+          <span class="settings__preview-text settings__preview-text--${firstColor}">${firstLabel}</span>
+          <span class="settings__preview-text settings__preview-text--${firstColor}">0</span>
+          ${secondTag}
+          <span class="settings__preview-text settings__preview-text--${secondColor}">${secondLabel}</span>
+          <span class="settings__preview-text settings__preview-text--${secondColor}">0</span>
+        </div>
+        <div class="settings__preview-current">
+          <span class="settings__preview-current-label">Current player:</span>
+          ${blueTag}
+        </div>
+        <div class="settings__preview-exit">
+          <svg viewBox="0 0 11 9" fill="currentColor" aria-hidden="true">
+            <path d="M8.575 5H3C2.85833 5 2.73958 4.95208 2.64375 4.85625C2.54792 4.76042 2.5 4.64167 2.5 4.5C2.5 4.35833 2.54792 4.23958 2.64375 4.14375C2.73958 4.04792 2.85833 4 3 4H8.575L8.15 3.575C8.05 3.475 8.00208 3.35833 8.00625 3.225C8.01042 3.09167 8.05833 2.975 8.15 2.875C8.25 2.775 8.36875 2.72292 8.50625 2.71875C8.64375 2.71458 8.7625 2.7625 8.8625 2.8625L10.15 4.15C10.25 4.25 10.3 4.36667 10.3 4.5C10.3 4.63333 10.25 4.75 10.15 4.85L8.8625 6.1375C8.7625 6.2375 8.64375 6.28542 8.50625 6.28125C8.36875 6.27708 8.25 6.225 8.15 6.125C8.05833 6.025 8.01042 5.90833 8.00625 5.775C8.00208 5.64167 8.05 5.525 8.15 5.425L8.575 5ZM6 2.5V1H1V8H6V6.5C6 6.35833 6.04792 6.23958 6.14375 6.14375C6.23958 6.04792 6.35833 6 6.5 6C6.64167 6 6.76042 6.04792 6.85625 6.14375C6.95208 6.23958 7 6.35833 7 6.5V8C7 8.275 6.90208 8.51042 6.70625 8.70625C6.51042 8.90208 6.275 9 6 9H1C0.725 9 0.489583 8.90208 0.29375 8.70625C0.0979167 8.51042 0 8.275 0 8V1C0 0.725 0.0979167 0.489583 0.29375 0.29375C0.489583 0.0979167 0.725 0 1 0H6C6.275 0 6.51042 0.0979167 6.70625 0.29375C6.90208 0.489583 7 0.725 7 1V2.5C7 2.64167 6.95208 2.76042 6.85625 2.85625C6.76042 2.95208 6.64167 3 6.5 3C6.35833 3 6.23958 2.95208 6.14375 2.85625C6.04792 2.76042 6 2.64167 6 2.5Z"/>
+          </svg>
+          <span>Exit game</span>
+        </div>
+      </div>
+      <div class="settings__preview-cards">
+        <div class="settings__preview-card settings__preview-card--back">
+          ${theme === 'gaming' ? '' : PREVIEW_BACK_MASK}
+        </div>
+        <div class="settings__preview-card settings__preview-card--front">
+          ${PREVIEW_FRONT_ICONS[theme]}
+        </div>
+      </div>
+    </div>
+  `;
+}
 
 export function renderSettings(
   container: HTMLElement,
@@ -155,7 +340,12 @@ export function renderSettings(
             `).join('')}
           </ul>
         </section>
+      </div>
 
+      <div class="settings__right">
+        <div class="settings__preview-wrap">
+          ${renderPreview(config.theme)}
+        </div>
         <footer class="settings__footer">
           <nav class="settings__steps" aria-label="Settings sections">
             <span class="settings__step">Game theme</span>
@@ -167,23 +357,6 @@ export function renderSettings(
             Start
           </button>
         </footer>
-      </div>
-
-      <div class="settings__right">
-        <div class="settings__preview" style="--preview-bg: ${PREVIEW_BG[config.theme]}">
-          <div class="settings__preview-cards">
-            <div class="settings__preview-card settings__preview-card--bottom" style="--card-color: ${THEME_COLORS[config.theme]}">
-              <div class="settings__preview-card-icon settings__preview-card-icon--back">
-                ${PREVIEW_BACK_ICON}
-              </div>
-            </div>
-            <div class="settings__preview-card settings__preview-card--top" style="--card-color: ${THEME_COLORS[config.theme]}">
-              <div class="settings__preview-card-icon settings__preview-card-icon--front">
-                ${PREVIEW_FRONT_ICONS[config.theme]}
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </main>
   `;
@@ -201,20 +374,8 @@ export function renderSettings(
   }
 
   function updatePreview(): void {
-    const cardColor = THEME_COLORS[config.theme];
-    const bg = PREVIEW_BG[config.theme];
-
-    const preview = container.querySelector('.settings__preview') as HTMLElement | null;
-    if (preview) preview.style.setProperty('--preview-bg', bg);
-
-    container.querySelectorAll('.settings__preview-card').forEach(card => {
-      (card as HTMLElement).style.setProperty('--card-color', cardColor);
-    });
-
-    const frontIcon = container.querySelector('.settings__preview-card-icon--front');
-    if (frontIcon) {
-      frontIcon.innerHTML = PREVIEW_FRONT_ICONS[config.theme];
-    }
+    const wrap = container.querySelector('.settings__preview-wrap');
+    if (wrap) wrap.innerHTML = renderPreview(config.theme);
   }
 
   container.querySelector('.settings__start')?.addEventListener('click', () => {

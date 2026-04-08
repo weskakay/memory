@@ -1,0 +1,293 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.game {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 41px 112px;
+  gap: 54px;
+
+  @include respond(tablet) {
+    padding: 24px 32px;
+    gap: 32px;
+  }
+
+  @include respond(mobile) {
+    padding: 16px;
+    gap: 20px;
+  }
+
+  &--coding {
+    background: $bg-dark;
+    color: $text-light;
+    --theme-player-blue: #2bb1ff;
+    --theme-player-orange: #f58e39;
+    --header-bg: transparent;
+    --header-padding: 0;
+    --header-min-height: 0;
+    --score-box-bg: rgba(134, 233, 214, 0.2);
+    --score-box-radius: 0;
+    --score-box-height: 62px;
+    --exit-bg: rgba(134, 233, 214, 0.2);
+    --exit-text: #{$text-light};
+    --exit-accent: #4dd5bc;
+    --exit-border: #4dd5bc;
+    --exit-border-width: 1px;
+    --exit-radius: 0;
+    --exit-height: 62px;
+    --current-box-radius: 6px;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+
+  &--gaming {
+    background: #294f60;
+    color: $text-light;
+    --theme-player-blue: #097fc5;
+    --theme-player-orange: #ea6900;
+    --theme-current-blue: #1faafc;
+    --theme-current-orange: #ea6900;
+    --header-bg: rgba(253, 150, 201, 0.2);
+    --header-padding: 24px;
+    --header-min-height: 102px;
+    --score-box-bg: #ffffff;
+    --score-box-radius: 10px;
+    --score-box-height: 54px;
+    --exit-bg: rgba(237, 27, 118, 0.08);
+    --exit-text: #{$text-light};
+    --exit-accent: #e71c4f;
+    --exit-border: #e71c4f;
+    --exit-border-width: 2px;
+    --exit-radius: 9px;
+    --exit-height: 52px;
+    --current-box-radius: 3px;
+    --card-shadow: 6px 6px 6px rgba(0, 0, 0, 0.25);
+  }
+
+  &--daprojects {
+    background: #ffffff;
+    color: #1e7594;
+    --theme-player-blue: #097fc5;
+    --theme-player-orange: #ea6900;
+    --header-bg: #f0f3f4;
+    --header-padding: 24px;
+    --header-min-height: 102px;
+    --score-box-bg: #ffffff;
+    --score-box-radius: 10px;
+    --score-box-height: 54px;
+    --exit-bg: #bfe5f2;
+    --exit-text: #1e7594;
+    --exit-accent: #1e7594;
+    --exit-border: transparent;
+    --exit-border-width: 0;
+    --exit-radius: 10px;
+    --exit-height: 54px;
+    --current-box-radius: 8px;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &--foods {
+    background: #ffffff;
+    color: #a45212;
+    --theme-player-blue: #097fc5;
+    --theme-player-orange: #ea6900;
+    --header-bg: #f0e5d9;
+    --header-padding: 24px;
+    --header-min-height: 102px;
+    --score-box-bg: #ffffff;
+    --score-box-radius: 10px;
+    --score-box-height: 54px;
+    --exit-bg: #fff9f2;
+    --exit-text: #f3832d;
+    --exit-accent: #f3832d;
+    --exit-border: #f3832d;
+    --exit-border-width: 2px;
+    --exit-radius: 10px;
+    --exit-height: 54px;
+    --current-box-radius: 8px;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &__header {
+    width: 100%;
+    max-width: 1219px;
+    min-height: var(--header-min-height, 102px);
+    background: var(--header-bg);
+    border-radius: 10px;
+    padding: var(--header-padding, 24px);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 24px;
+
+    @include respond(mobile) {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      padding: 16px;
+      min-height: 0;
+    }
+  }
+
+  &__scores-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 24px;
+    background: var(--score-box-bg);
+    border-radius: var(--score-box-radius, 10px);
+    padding: 0 24px;
+    height: var(--score-box-height, 54px);
+
+    @include respond(mobile) {
+      justify-content: center;
+      gap: 16px;
+      padding: 10px 20px;
+      height: auto;
+    }
+  }
+
+  &__current {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: inherit;
+    font-family: $font-body;
+    font-weight: 700;
+    font-size: 20px;
+
+    @include respond(mobile) {
+      font-size: 16px;
+    }
+  }
+
+  &__current-label {
+    color: inherit;
+  }
+
+  &__current-box {
+    --current-player-color: var(--theme-current-blue, var(--theme-player-blue));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 41px;
+    height: 40px;
+    border-radius: var(--current-box-radius, 6px);
+    background: var(--current-player-color);
+    color: $text-light;
+
+    svg {
+      display: block;
+      width: auto;
+      height: 26px;
+    }
+
+    &--blue {
+      --current-player-color: var(--theme-current-blue, var(--theme-player-blue));
+    }
+
+    &--orange {
+      --current-player-color: var(--theme-current-orange, var(--theme-player-orange));
+    }
+
+    .game--coding & {
+      background: transparent;
+      color: var(--current-player-color);
+      width: auto;
+      height: auto;
+
+      svg {
+        height: 24px;
+      }
+    }
+  }
+
+  &__exit {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--exit-bg);
+    color: var(--exit-text);
+    font-family: $font-body;
+    font-weight: 700;
+    font-size: 18px;
+    padding: 0 24px;
+    border: var(--exit-border-width, 2px) solid var(--exit-border, transparent);
+    border-radius: var(--exit-radius, 10px);
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+    height: var(--exit-height, 54px);
+
+    svg {
+      display: block;
+      width: auto;
+      height: 22px;
+    }
+
+    &:hover {
+      background: var(--exit-accent);
+      color: $text-light;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--exit-accent);
+      outline-offset: 3px;
+    }
+
+    @include respond(mobile) {
+      height: auto;
+      padding: 12px 20px;
+    }
+  }
+
+  &__board {
+    display: grid;
+    gap: var(--gap, 16px);
+    grid-template-columns: repeat(var(--cols, 4), var(--card-w, 120px));
+    grid-auto-rows: var(--card-h, 120px);
+    justify-content: center;
+
+    @include respond(tablet) {
+      --card-w: 92px;
+      --card-h: 92px;
+      --gap: 12px;
+    }
+
+    @include respond(mobile) {
+      --card-w: clamp(48px, 18vw, 72px);
+      --card-h: clamp(48px, 18vw, 72px);
+      --gap: 8px;
+    }
+
+    &--16 {
+      --cols: 4;
+      --card-w: 120px;
+      --card-h: 120px;
+      --gap: 16px;
+    }
+
+    &--24 {
+      --cols: 6;
+      --card-w: 105px;
+      --card-h: 120px;
+      --gap: 6px;
+
+      @include respond(tablet) {
+        --card-w: 80px;
+        --card-h: 92px;
+      }
+
+      @include respond(mobile) {
+        --card-w: clamp(40px, 14vw, 60px);
+        --card-h: clamp(48px, 16vw, 70px);
+      }
+    }
+
+    &--36 {
+      --cols: 6;
+      --card-w: 120px;
+      --card-h: 120px;
+      --gap: 6px;
+    }
+  }
+}
