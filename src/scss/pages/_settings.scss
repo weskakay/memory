@@ -2,55 +2,60 @@
 @use '../abstracts/mixins' as *;
 
 .settings {
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   background: $bg-light;
   display: grid;
   grid-template-columns: 1fr 1fr;
 
   @include respond(tablet) {
     grid-template-columns: 1fr;
+    height: auto;
+    min-height: 100vh;
+    overflow: auto;
   }
 
   &__left {
-    padding: $spacing-xl $spacing-lg;
+    padding: $spacing-lg;
     display: flex;
     flex-direction: column;
-    gap: 54px;
+    justify-content: center;
+    gap: 24px;
 
     @include respond(mobile) {
-      padding: $spacing-lg $spacing-md;
-      gap: $spacing-lg;
+      padding: $spacing-md;
+      gap: $spacing-md;
     }
   }
 
   &__title {
     display: inline-block;
     font-family: $font-heading;
-    font-size: 64px;
+    font-size: 48px;
     color: $text-dark;
     line-height: 1;
 
     @include respond(mobile) {
-      font-size: 40px;
+      font-size: 36px;
     }
   }
 
   &__title-underline {
     display: block;
-    width: 250px;
-    height: 18px;
+    width: 200px;
+    height: 14px;
     color: $accent;
-    margin-top: 6px;
+    margin-top: 4px;
 
     @include respond(mobile) {
-      width: 180px;
+      width: 150px;
     }
   }
 
   &__group {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 10px;
   }
 
   &__group-header {
@@ -60,34 +65,34 @@
   }
 
   &__group-icon {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     flex-shrink: 0;
   }
 
   &__group-title {
     font-family: $font-body;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 700;
     color: $text-dark;
   }
 
   &__options {
     list-style: none;
-    padding: 0 0 0 44px;
+    padding: 0 0 0 40px;
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
   }
 
   &__option {
     &-label {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       font-family: $font-body;
-      font-size: 20px;
+      font-size: 16px;
       color: $text-dark;
       cursor: pointer;
       user-select: none;
@@ -95,9 +100,9 @@
 
     input[type='radio'] {
       appearance: none;
-      width: 24px;
-      height: 24px;
-      border: 2px solid #303131;
+      width: 20px;
+      height: 20px;
+      border: 2px solid $text-dark;
       border-radius: 50%;
       margin: 0;
       cursor: pointer;
@@ -191,7 +196,7 @@
   }
 
   &__right {
-    background: #f5f5f5;
+    background: $muted;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -372,16 +377,16 @@
 
     &--back {
       top: 15%;
-      left: 18%;
-      transform: rotate(var(--preview-card-back-rotate, -11deg));
+      left: 14%;
+      transform: rotate(var(--preview-card-back-rotate, -5.45deg));
       background: var(--preview-card-back);
       box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
       z-index: 2;
     }
 
     &--front {
-      top: 10%;
-      right: 12%;
+      top: 25%;
+      right: 14%;
       transform: rotate(var(--preview-card-front-rotate, 11deg));
       background-color: var(--preview-card-front);
       background-image: var(--preview-card-image, none);
