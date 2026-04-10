@@ -2,7 +2,8 @@ import './scss/main.scss';
 import { renderHome } from './views/HomeView';
 import { renderSettings } from './views/SettingsView';
 import { renderGame } from './views/GameView';
-import type { GameConfig } from './types/types';
+import { renderGameOver } from './views/GameOverView';
+import type { GameConfig, ThemeName } from './types/types';
 
 const app = document.getElementById('app');
 if (!app) throw new Error('App container #app not found');
@@ -26,9 +27,16 @@ function showGame(config: GameConfig): void {
     appContainer,
     config,
     () => showSettings(),
-    () => showSettings(),
-    () => showSettings()
+    (scores) => showGameOver(config.theme, scores),
+    (_winner, scores) => showGameOver(config.theme, scores)
   );
+}
+
+function showGameOver(
+  theme: ThemeName,
+  scores: { blue: number; orange: number }
+): void {
+  renderGameOver(appContainer, theme, scores, () => showHome());
 }
 
 showHome();

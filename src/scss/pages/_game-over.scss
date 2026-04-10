@@ -1,0 +1,151 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.game-over {
+  min-height: 100vh;
+  @include flex-center;
+  flex-direction: column;
+  gap: $spacing-xl;
+  padding: $spacing-lg;
+  background: var(--go-bg);
+  color: $text-light;
+
+  // Theme backgrounds
+  &--coding {
+    --go-bg: #{$bg-dark};
+    --go-title-color: #{$gameover-title-coding};
+    --go-title-shadow: 4px 4px 0 #{$text-light};
+    --go-title-case: none;
+    --go-title-style: italic;
+    --go-title-spacing: normal;
+    --go-scorebox-bg: rgba(#{red($gameover-scorebox-coding)}, #{green($gameover-scorebox-coding)}, #{blue($gameover-scorebox-coding)}, 0.2);
+    --go-scorebox-radius: 0;
+    --go-badge-blue: #{$game-player-blue-coding};
+    --go-badge-orange: #{$game-player-orange-coding};
+  }
+
+  &--gaming {
+    --go-bg: #{$game-bg-gaming};
+    --go-title-color: #{$gameover-title-gaming};
+    --go-title-shadow: none;
+    --go-title-case: uppercase;
+    --go-title-style: normal;
+    --go-title-spacing: 0.15em;
+    --go-scorebox-bg: #{$bg-light};
+    --go-scorebox-radius: #{$radius-md};
+    --go-badge-blue: #{$game-player-blue-alt};
+    --go-badge-orange: #{$game-player-orange-alt};
+  }
+
+  &--daprojects {
+    --go-bg: #{$game-text-daprojects};
+    --go-title-color: #{$gameover-title-daprojects};
+    --go-title-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    --go-title-case: uppercase;
+    --go-title-style: normal;
+    --go-title-spacing: 0.1em;
+    --go-scorebox-bg: #{$bg-light};
+    --go-scorebox-radius: #{$radius-md};
+    --go-badge-blue: #{$game-player-blue-alt};
+    --go-badge-orange: #{$game-player-orange-alt};
+  }
+
+  &--foods {
+    --go-bg: #{$card-food};
+    --go-title-color: #{$text-light};
+    --go-title-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    --go-title-case: uppercase;
+    --go-title-style: normal;
+    --go-title-spacing: 0.1em;
+    --go-scorebox-bg: #{$bg-light};
+    --go-scorebox-radius: 0;
+    --go-badge-blue: #{$game-player-blue-alt};
+    --go-badge-orange: #{$game-player-orange-alt};
+  }
+
+  &__title {
+    font-family: $font-heading;
+    font-size: clamp(3rem, 10vw, 6rem);
+    font-weight: 700;
+    font-style: var(--go-title-style, normal);
+    text-transform: var(--go-title-case, none);
+    letter-spacing: var(--go-title-spacing, normal);
+    color: var(--go-title-color);
+    text-shadow: var(--go-title-shadow, none);
+    text-align: center;
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  &__scores {
+    @include flex-center;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  &__subtitle {
+    font-family: $font-heading;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $text-light;
+    margin: 0;
+  }
+
+  &__badges {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-lg;
+    background: var(--go-scorebox-bg);
+    border-radius: var(--go-scorebox-radius, 0);
+    padding: $spacing-md $spacing-lg;
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-sm;
+    font-family: $font-heading;
+    font-weight: 700;
+    font-size: 1.25rem;
+
+    svg {
+      width: auto;
+      height: 24px;
+    }
+
+    &--blue {
+      color: var(--go-badge-blue);
+    }
+
+    &--orange {
+      color: var(--go-badge-orange);
+    }
+  }
+
+  &__badge-score {
+    font-size: 1.5rem;
+  }
+
+  &__restart {
+    font-family: $font-heading;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: $text-light;
+    background: transparent;
+    border: 2px solid $text-light;
+    border-radius: $radius-sm;
+    padding: $spacing-sm $spacing-lg;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+
+    &:hover {
+      background: $text-light;
+      color: var(--go-bg);
+    }
+
+    &:focus-visible {
+      outline: 2px solid $text-light;
+      outline-offset: 3px;
+    }
+  }
+}
