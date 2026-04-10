@@ -1,6 +1,7 @@
 import './scss/main.scss';
 import { renderHome } from './views/HomeView';
 import { renderSettings } from './views/SettingsView';
+import { renderGame } from './views/GameView';
 import type { GameConfig } from './types/types';
 
 const app = document.getElementById('app');
@@ -20,8 +21,14 @@ function showSettings(): void {
   });
 }
 
-function showGame(_config: GameConfig): void {
-  appContainer.innerHTML = '<div style="min-height:100vh;background:#303131;"></div>';
+function showGame(config: GameConfig): void {
+  renderGame(
+    appContainer,
+    config,
+    () => showSettings(),
+    () => showSettings(),
+    () => showSettings()
+  );
 }
 
 showHome();

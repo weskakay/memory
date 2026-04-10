@@ -1,5 +1,6 @@
 import type { GameConfig, ThemeName, PlayerColor } from '../types/types';
 import { Game } from '../models/Game';
+import { GameService } from '../services/GameService';
 
 const SCORE_ICON_CODING = `
   <svg viewBox="0 0 24 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -89,6 +90,10 @@ function renderCardBack(theme: ThemeName): string {
           <rect width="122" height="122" fill="#F3832D"/>
         </svg>
       `;
+    default: {
+      const exhaustive: never = theme;
+      throw new Error(`Unknown theme: ${exhaustive}`);
+    }
   }
 }
 
@@ -124,8 +129,8 @@ export function renderGame(
   container: HTMLElement,
   config: GameConfig,
   onExit: () => void,
-  _onGameOver: (scores: { blue: number; orange: number }) => void,
-  _onWinner: (winner: PlayerColor, scores: { blue: number; orange: number }) => void
+  onGameOver: (scores: { blue: number; orange: number }) => void,
+  onWinner: (winner: PlayerColor, scores: { blue: number; orange: number }) => void
 ): void {
   const game = new Game(config);
   const [blue, orange] = game.players;
@@ -168,4 +173,15 @@ export function renderGame(
 
   const exitBtn = container.querySelector<HTMLButtonElement>('.game__exit');
   exitBtn?.addEventListener('click', () => onExit());
+
+  const board = container.querySelector<HTMLElement>('.game__board');
+  const service = new GameService(game, container, config.theme, renderCardBack, onGameOver, onWinner);
+
+  board?.addEventListener('click', (e: Event) => {
+    const target = (e.target as HTMLElement).closest<HTMLElement>('.card');
+    if (!target) return;
+    const id = target.dataset.id;
+    if (id == null) return;
+    service.handleCardClick(Number(id));
+  });
 }

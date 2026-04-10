@@ -6,6 +6,11 @@
 @use 'base/reset';
 @use 'base/typography';
 
+// Components
+@use 'components/card';
+@use 'components/score-badge';
+
 // Pages
 @use 'pages/home';
 @use 'pages/settings';
+@use 'pages/game';
