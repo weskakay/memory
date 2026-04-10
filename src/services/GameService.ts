@@ -11,7 +11,6 @@ export class GameService {
   private game: Game;
   private container: HTMLElement;
   private theme: ThemeName;
-  private renderCardBack: (theme: ThemeName) => string;
   private onGameOver: GameOverCallback;
   private onWinner: WinnerCallback;
   private locked = false;
@@ -21,14 +20,12 @@ export class GameService {
     game: Game,
     container: HTMLElement,
     theme: ThemeName,
-    renderCardBack: (theme: ThemeName) => string,
     onGameOver: GameOverCallback,
     onWinner: WinnerCallback
   ) {
     this.game = game;
     this.container = container;
     this.theme = theme;
-    this.renderCardBack = renderCardBack;
     this.onGameOver = onGameOver;
     this.onWinner = onWinner;
   }
@@ -40,7 +37,7 @@ export class GameService {
     if (!card || card.isFlipped || card.isMatched) return;
 
     card.flip();
-    this.updateCardDOM(card);
+    this.flipCardDOM(card);
     this.flippedCards.push(card);
 
     if (this.flippedCards.length === 2) {
@@ -76,8 +73,8 @@ export class GameService {
   private handleMatchFailure(card1: Card, card2: Card): void {
     card1.unflip();
     card2.unflip();
-    this.updateCardDOM(card1);
-    this.updateCardDOM(card2);
+    this.flipCardDOM(card1);
+    this.flipCardDOM(card2);
 
     this.game.switchPlayer();
     this.updateCurrentPlayer();
@@ -85,14 +82,14 @@ export class GameService {
     this.locked = false;
   }
 
-  private updateCardDOM(card: Card): void {
+  private flipCardDOM(card: Card): void {
     const el = this.container.querySelector<HTMLElement>(`.card[data-id="${card.id}"]`);
     if (!el) return;
 
     if (card.isFlipped) {
-      el.innerHTML = `<span class="card__emoji">${card.emoji}</span>`;
+      el.classList.add('card--flipped');
     } else {
-      el.innerHTML = this.renderCardBack(this.theme);
+      el.classList.remove('card--flipped');
     }
   }
 

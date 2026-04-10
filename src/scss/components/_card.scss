@@ -3,15 +3,40 @@
 .card {
   width: var(--card-w, 120px);
   height: var(--card-h, 120px);
-  border-radius: $radius-md;
-  overflow: hidden;
-  box-shadow: var(--card-shadow, 0 4px 12px rgba(0, 0, 0, 0.25));
+  perspective: 1000px;
   cursor: pointer;
 
-  > svg {
-    display: block;
+  &__inner {
+    position: relative;
     width: 100%;
     height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.6s ease;
+    border-radius: $radius-md;
+  }
+
+  &--flipped &__inner {
+    transform: rotateY(180deg);
+  }
+
+  &__face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: $radius-md;
+    overflow: hidden;
+    box-shadow: var(--card-shadow, 0 4px 12px rgba(0, 0, 0, 0.25));
+
+    > svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    &--front {
+      transform: rotateY(180deg);
+    }
   }
 
   &--matched {
@@ -27,5 +52,6 @@
     height: 100%;
     font-size: 2.5rem;
     background: $bg-light;
+    border-radius: $radius-md;
   }
 }

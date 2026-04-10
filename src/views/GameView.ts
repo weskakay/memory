@@ -141,7 +141,14 @@ export function renderGame(
     .map(
       card => `
         <div class="card" data-id="${card.id}" aria-label="Card">
-          ${cardBack}
+          <div class="card__inner">
+            <div class="card__face card__face--back">
+              ${cardBack}
+            </div>
+            <div class="card__face card__face--front">
+              <span class="card__emoji">${card.emoji}</span>
+            </div>
+          </div>
         </div>
       `
     )
@@ -175,7 +182,7 @@ export function renderGame(
   exitBtn?.addEventListener('click', () => onExit());
 
   const board = container.querySelector<HTMLElement>('.game__board');
-  const service = new GameService(game, container, config.theme, renderCardBack, onGameOver, onWinner);
+  const service = new GameService(game, container, config.theme, onGameOver, onWinner);
 
   board?.addEventListener('click', (e: Event) => {
     const target = (e.target as HTMLElement).closest<HTMLElement>('.card');
