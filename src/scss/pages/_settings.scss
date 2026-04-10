@@ -161,7 +161,7 @@
   &__step {
     font-family: $font-body;
     font-size: 14px;
-    color: #909090;
+    color: $text-muted-dark;
 
     &:not(:last-child)::after {
       content: '/';
@@ -224,8 +224,8 @@
     width: 100%;
     max-width: 460px;
     aspect-ratio: 460 / 412;
-    border-radius: 16px;
-    background: var(--preview-bg, #303131);
+    border-radius: $radius-lg;
+    background: var(--preview-bg, #{$bg-dark});
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
     padding: 14px 14px 0;
     display: flex;
@@ -234,7 +234,7 @@
     position: relative;
     overflow: hidden;
     transition: background 0.3s ease;
-    color: var(--preview-body-text, #ffffff);
+    color: var(--preview-body-text, #{$text-light});
     font-family: $font-heading;
   }
 
@@ -282,13 +282,13 @@
     flex-shrink: 0;
 
     &--blue {
-      background: var(--preview-player-blue, #2bb1ff);
-      color: var(--preview-player-blue, #2bb1ff);
+      background: var(--preview-player-blue, #{$game-player-blue-coding});
+      color: var(--preview-player-blue, #{$game-player-blue-coding});
     }
 
     &--orange {
-      background: var(--preview-player-orange, #f58e39);
-      color: var(--preview-player-orange, #f58e39);
+      background: var(--preview-player-orange, #{$game-player-orange-coding});
+      color: var(--preview-player-orange, #{$game-player-orange-coding});
     }
 
     &--chevron {
@@ -400,7 +400,7 @@
       svg {
         width: var(--preview-icon-size, 48%);
         height: var(--preview-icon-size, 48%);
-        color: var(--preview-card-icon, #de4c36);
+        color: var(--preview-card-icon, #{$preview-card-icon});
       }
     }
   }

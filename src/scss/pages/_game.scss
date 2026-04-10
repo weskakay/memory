@@ -22,8 +22,8 @@
   &--coding {
     background: $bg-dark;
     color: $text-light;
-    --theme-player-blue: #2bb1ff;
-    --theme-player-orange: #f58e39;
+    --theme-player-blue: #{$game-player-blue-coding};
+    --theme-player-orange: #{$game-player-orange-coding};
     --header-bg: transparent;
     --header-padding: 0;
     --header-min-height: 0;
@@ -32,8 +32,8 @@
     --score-box-height: 62px;
     --exit-bg: rgba(134, 233, 214, 0.2);
     --exit-text: #{$text-light};
-    --exit-accent: #4dd5bc;
-    --exit-border: #4dd5bc;
+    --exit-accent: #{$game-accent-coding};
+    --exit-border: #{$game-accent-coding};
     --exit-border-width: 1px;
     --exit-radius: 0;
     --exit-height: 62px;
@@ -42,22 +42,22 @@
   }
 
   &--gaming {
-    background: #294f60;
+    background: $game-bg-gaming;
     color: $text-light;
-    --theme-player-blue: #097fc5;
-    --theme-player-orange: #ea6900;
-    --theme-current-blue: #1faafc;
-    --theme-current-orange: #ea6900;
+    --theme-player-blue: #{$game-player-blue-alt};
+    --theme-player-orange: #{$game-player-orange-alt};
+    --theme-current-blue: #{$game-current-blue-gaming};
+    --theme-current-orange: #{$game-player-orange-alt};
     --header-bg: rgba(253, 150, 201, 0.2);
     --header-padding: 24px;
     --header-min-height: 102px;
-    --score-box-bg: #ffffff;
+    --score-box-bg: #{$bg-light};
     --score-box-radius: 10px;
     --score-box-height: 54px;
     --exit-bg: rgba(237, 27, 118, 0.08);
     --exit-text: #{$text-light};
-    --exit-accent: #e71c4f;
-    --exit-border: #e71c4f;
+    --exit-accent: #{$game-accent-gaming};
+    --exit-border: #{$game-accent-gaming};
     --exit-border-width: 2px;
     --exit-radius: 9px;
     --exit-height: 52px;
@@ -66,19 +66,19 @@
   }
 
   &--daprojects {
-    background: #ffffff;
-    color: #1e7594;
-    --theme-player-blue: #097fc5;
-    --theme-player-orange: #ea6900;
-    --header-bg: #f0f3f4;
+    background: $game-bg-daprojects;
+    color: $game-text-daprojects;
+    --theme-player-blue: #{$game-player-blue-alt};
+    --theme-player-orange: #{$game-player-orange-alt};
+    --header-bg: #{$game-header-daprojects};
     --header-padding: 24px;
     --header-min-height: 102px;
-    --score-box-bg: #ffffff;
+    --score-box-bg: #{$bg-light};
     --score-box-radius: 10px;
     --score-box-height: 54px;
-    --exit-bg: #bfe5f2;
-    --exit-text: #1e7594;
-    --exit-accent: #1e7594;
+    --exit-bg: #{$game-exit-bg-daprojects};
+    --exit-text: #{$game-text-daprojects};
+    --exit-accent: #{$game-text-daprojects};
     --exit-border: transparent;
     --exit-border-width: 0;
     --exit-radius: 10px;
@@ -88,20 +88,20 @@
   }
 
   &--foods {
-    background: #ffffff;
-    color: #a45212;
-    --theme-player-blue: #097fc5;
-    --theme-player-orange: #ea6900;
-    --header-bg: #f0e5d9;
+    background: $game-bg-foods;
+    color: $game-text-foods;
+    --theme-player-blue: #{$game-player-blue-alt};
+    --theme-player-orange: #{$game-player-orange-alt};
+    --header-bg: #{$game-header-foods};
     --header-padding: 24px;
     --header-min-height: 102px;
-    --score-box-bg: #ffffff;
+    --score-box-bg: #{$bg-light};
     --score-box-radius: 10px;
     --score-box-height: 54px;
-    --exit-bg: #fff9f2;
-    --exit-text: #f3832d;
-    --exit-accent: #f3832d;
-    --exit-border: #f3832d;
+    --exit-bg: #{$game-exit-bg-foods};
+    --exit-text: #{$card-food};
+    --exit-accent: #{$card-food};
+    --exit-border: #{$card-food};
     --exit-border-width: 2px;
     --exit-radius: 10px;
     --exit-height: 54px;

@@ -1,6 +1,7 @@
 import type { GameConfig, ThemeName, PlayerColor } from '../types/types';
 import { Game } from '../models/Game';
 import { GameService } from '../services/GameService';
+import { showExitPopup } from './PopupView';
 
 const SCORE_ICON_CODING = `
   <svg viewBox="0 0 24 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -179,7 +180,14 @@ export function renderGame(
   `;
 
   const exitBtn = container.querySelector<HTMLButtonElement>('.game__exit');
-  exitBtn?.addEventListener('click', () => onExit());
+  exitBtn?.addEventListener('click', () => {
+    showExitPopup(
+      container,
+      config.theme,
+      () => {},
+      () => onExit()
+    );
+  });
 
   const board = container.querySelector<HTMLElement>('.game__board');
   const service = new GameService(game, container, config.theme, onGameOver, onWinner);
