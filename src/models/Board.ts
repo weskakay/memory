@@ -2,7 +2,7 @@ import type { BoardSize, ThemeName } from '../types/types';
 import { Card } from './Card';
 
 const THEME_EMOJIS: Record<ThemeName, string[]> = {
-  coding: ['💻', '🖥️', '⌨️', '🖱️', '📟', '💾', '🔌', '📡', '🛠️', '🔧', '📱', '🖨️', '🎮', '📊', '💡', '🔋', '🌐', '🤖'],
+  coding: ['angular', 'typescript', 'javascript', 'html', 'vscode', 'css', 'django', 'npm', 'terminal', 'python', 'github', 'nodejs', 'bootstrap', 'vue', 'react', 'sass', 'database', 'firebase'],
   gaming: ['🎮', '🕹️', '🎲', '🏆', '⚔️', '🛡️', '🎯', '🏹', '💣', '👾', '🎪', '🃏', '♟️', '🎰', '🎳', '🏅', '🎖️', '🎭'],
   daprojects: ['📋', '🗂️', '📌', '🎨', '🧩', '📐', '✏️', '📝', '🔍', '🗃️', '📎', '🖇️', '📑', '🏗️', '🧱', '🔩', '⚙️', '🛞'],
   foods: ['🍕', '🍔', '🌮', '🍣', '🧁', '🍩', '🥗', '🍜', '🥐', '🍿', '🧀', '🍇', '🥑', '🌽', '🍪', '🎂', '🥝', '🍫'],

@@ -2,6 +2,7 @@ import type { GameConfig, ThemeName, PlayerColor } from '../types/types';
 import { Game } from '../models/Game';
 import { GameService } from '../services/GameService';
 import { showExitPopup } from './PopupView';
+import { CODING_ICONS } from '../services/CardIcons';
 
 const SCORE_ICON_CODING = `
   <svg viewBox="0 0 24 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -56,41 +57,23 @@ const EXIT_ICON = `
 function renderCardBack(theme: ThemeName): string {
   switch (theme) {
     case 'coding':
-      return `
-        <svg viewBox="0 0 120 120" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <defs>
-            <linearGradient id="cb-coding" x1="79.8" y1="-11.4" x2="-23.4" y2="152.1" gradientUnits="userSpaceOnUse">
-              <stop offset="0.190791" stop-color="#4DD5BC"/>
-              <stop offset="1" stop-color="#286F62"/>
-            </linearGradient>
-          </defs>
-          <rect width="120" height="120" fill="url(#cb-coding)"/>
-        </svg>
-      `;
+      return `<div class="card__back-face card__back-face--coding"></div>`;
     case 'gaming':
       return `
-        <svg viewBox="0 0 105 120" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <svg viewBox="0 0 120 120" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <defs>
             <linearGradient id="cb-gaming" x1="3.4125" y1="0" x2="148.748" y2="196.767" gradientUnits="userSpaceOnUse">
               <stop stop-color="#ED1B76"/>
               <stop offset="0.917628" stop-color="#0A2835"/>
             </linearGradient>
           </defs>
-          <rect width="105" height="120" fill="url(#cb-gaming)"/>
+          <rect width="120" height="120" fill="url(#cb-gaming)"/>
         </svg>
       `;
     case 'daprojects':
-      return `
-        <svg viewBox="0 0 120 100" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <rect width="120" height="100" fill="#1E7594"/>
-        </svg>
-      `;
+      return `<div class="card__back-face card__back-face--daprojects"></div>`;
     case 'foods':
-      return `
-        <svg viewBox="0 0 122 122" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <rect width="122" height="122" fill="#F3832D"/>
-        </svg>
-      `;
+      return `<div class="card__back-face card__back-face--foods"></div>`;
     default: {
       const exhaustive: never = theme;
       throw new Error(`Unknown theme: ${exhaustive}`);
@@ -139,20 +122,24 @@ export function renderGame(
   const cardBack = renderCardBack(config.theme);
 
   const cards = game.board.cards
-    .map(
-      card => `
+    .map(card => {
+      const frontContent =
+        config.theme === 'coding' && CODING_ICONS[card.emoji]
+          ? CODING_ICONS[card.emoji]
+          : `<span class="card__emoji">${card.emoji}</span>`;
+      return `
         <div class="card" data-id="${card.id}" aria-label="Card">
           <div class="card__inner">
             <div class="card__face card__face--back">
               ${cardBack}
             </div>
             <div class="card__face card__face--front">
-              <span class="card__emoji">${card.emoji}</span>
+              ${frontContent}
             </div>
           </div>
         </div>
-      `
-    )
+      `;
+    })
     .join('');
 
   container.innerHTML = `

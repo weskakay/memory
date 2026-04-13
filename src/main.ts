@@ -8,26 +8,24 @@ import type { GameConfig, ThemeName, PlayerColor } from './types/types';
 
 const WINNER_DELAY_MS = 3000;
 
-const app = document.getElementById('app');
+const app = document.getElementById('app') as HTMLElement;
 if (!app) throw new Error('App container #app not found');
 
-const appContainer: HTMLElement = app;
-
 function showHome(): void {
-  renderHome(appContainer, () => {
+  renderHome(app, () => {
     showSettings();
   });
 }
 
 function showSettings(): void {
-  renderSettings(appContainer, (config: GameConfig) => {
+  renderSettings(app, (config: GameConfig) => {
     showGame(config);
   });
 }
 
 function showGame(config: GameConfig): void {
   renderGame(
-    appContainer,
+    app,
     config,
     () => showSettings(),
     (scores) => showGameOver(config.theme, scores),
@@ -39,7 +37,7 @@ function showGameOver(
   theme: ThemeName,
   scores: { blue: number; orange: number }
 ): void {
-  renderGameOver(appContainer, theme, scores, () => showHome());
+  renderGameOver(app, theme, scores, () => showHome());
 }
 
 function showGameOverThenWinner(
@@ -47,7 +45,7 @@ function showGameOverThenWinner(
   scores: { blue: number; orange: number },
   winner: PlayerColor
 ): void {
-  renderGameOver(appContainer, theme, scores, null);
+  renderGameOver(app, theme, scores, null);
 
   setTimeout(() => {
     showWinner(theme, winner);
@@ -55,7 +53,7 @@ function showGameOverThenWinner(
 }
 
 function showWinner(theme: ThemeName, winner: PlayerColor): void {
-  renderWinner(appContainer, theme, winner, () => showHome());
+  renderWinner(app, theme, winner, () => showHome());
 }
 
 showHome();

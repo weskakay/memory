@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "check": "tsc --noEmit && sass --no-source-map --quiet src/scss/main.scss /dev/null",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview"
   },
