@@ -10,8 +10,10 @@ export function renderGameOver(
   container: HTMLElement,
   theme: ThemeName,
   scores: { blue: number; orange: number },
-  onRestart: () => void
+  onRestart: (() => void) | null
 ): void {
+  const buttonText = theme === 'coding' ? 'Back to start' : 'Home';
+
   container.innerHTML = `
     <main class="game-over game-over--${theme}">
       <h1 class="game-over__title">Game over</h1>
@@ -30,12 +32,12 @@ export function renderGameOver(
         </div>
       </section>
 
-      <button class="game-over__restart" type="button" aria-label="Back to start">
-        Back to start
-      </button>
+      ${onRestart ? `<button class="game-over__restart" type="button" aria-label="${buttonText}">${buttonText}</button>` : ''}
     </main>
   `;
 
-  const restartBtn = container.querySelector<HTMLButtonElement>('.game-over__restart');
-  restartBtn?.addEventListener('click', () => onRestart());
+  if (onRestart) {
+    const btn = container.querySelector<HTMLButtonElement>('.game-over__restart');
+    btn?.addEventListener('click', () => onRestart());
+  }
 }
