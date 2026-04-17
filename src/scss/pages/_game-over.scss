@@ -10,6 +10,11 @@
   background: var(--go-bg);
   color: $text-light;
 
+  @include respond(mobile) {
+    gap: $spacing-lg;
+    padding: $spacing-md;
+  }
+
   // Theme backgrounds
   &--coding {
     --go-bg: #{$bg-dark};
@@ -89,6 +94,10 @@
     font-weight: 700;
     color: $text-light;
     margin: 0;
+
+    @include respond(mobile) {
+      font-size: 1rem;
+    }
   }
 
   &__badges {
@@ -98,6 +107,11 @@
     background: var(--go-scorebox-bg);
     border-radius: var(--go-scorebox-radius, 0);
     padding: $spacing-md $spacing-lg;
+
+    @include respond(mobile) {
+      gap: $spacing-md;
+      padding: $spacing-sm $spacing-md;
+    }
   }
 
   &__badge {
@@ -113,6 +127,15 @@
       height: 24px;
     }
 
+    @include respond(mobile) {
+      font-size: 1rem;
+      gap: 6px;
+
+      svg {
+        height: 18px;
+      }
+    }
+
     &--blue {
       color: var(--go-badge-blue);
     }
@@ -124,6 +147,10 @@
 
   &__badge-score {
     font-size: 1.5rem;
+
+    @include respond(mobile) {
+      font-size: 1.25rem;
+    }
   }
 
   &__restart {
@@ -137,6 +164,11 @@
     padding: $spacing-sm $spacing-lg;
     cursor: pointer;
     transition: background 0.2s ease, color 0.2s ease;
+
+    @include respond(mobile) {
+      font-size: 1rem;
+      padding: $spacing-sm $spacing-md;
+    }
 
     &:hover {
       background: $text-light;

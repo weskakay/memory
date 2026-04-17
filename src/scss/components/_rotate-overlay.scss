@@ -1,0 +1,63 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.rotate-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: $bg-dark;
+  color: $text-light;
+  padding: 24px;
+  text-align: center;
+
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  &__icon {
+    width: 72px;
+    height: 72px;
+    color: $accent;
+    animation: rotate-hint 2s ease-in-out infinite;
+  }
+
+  &__title {
+    font-family: $font-heading;
+    font-weight: 700;
+    font-size: 22px;
+    margin: 0;
+  }
+
+  &__text {
+    font-family: $font-body;
+    font-size: 14px;
+    max-width: 300px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  @media (orientation: landscape) and (max-height: 500px) {
+    display: flex;
+  }
+
+  @media (max-width: 319px) {
+    display: flex;
+
+    .rotate-overlay__icon {
+      animation: none;
+      transform: none;
+    }
+  }
+}
+
+@keyframes rotate-hint {
+  0%,
+  100% {
+    transform: rotate(-90deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+}

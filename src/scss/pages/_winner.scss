@@ -11,6 +11,10 @@
   position: relative;
   overflow: hidden;
 
+  @include respond(mobile) {
+    padding: $spacing-md;
+  }
+
   &--coding {
     --win-bg: #{$bg-dark};
     --win-text: #{$text-light};
@@ -73,6 +77,10 @@
     gap: $spacing-lg;
     z-index: 2;
     text-align: center;
+
+    @include respond(mobile) {
+      gap: $spacing-md;
+    }
   }
 
   &__subtitle {
@@ -112,6 +120,11 @@
       object-fit: contain;
     }
 
+    @include respond(mobile) {
+      width: 140px;
+      height: 175px;
+    }
+
     &--blue {
       color: var(--win-player-blue);
     }
@@ -132,6 +145,11 @@
     padding: $spacing-sm $spacing-lg;
     cursor: pointer;
     transition: filter 0.2s ease, transform 0.15s ease;
+
+    @include respond(mobile) {
+      padding: $spacing-sm $spacing-md;
+      font-size: 0.9375rem;
+    }
 
     &:hover {
       filter: brightness(0.92);

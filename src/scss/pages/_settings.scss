@@ -8,7 +8,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
 
-  @include respond(tablet) {
+  @include respond(mobile) {
     grid-template-columns: 1fr;
     height: auto;
     min-height: 100vh;
@@ -21,6 +21,11 @@
     flex-direction: column;
     justify-content: center;
     gap: 24px;
+
+    @include respond(tablet) {
+      padding: $spacing-md;
+      gap: $spacing-md;
+    }
 
     @include respond(mobile) {
       padding: $spacing-md;
@@ -35,6 +40,10 @@
     color: $text-dark;
     line-height: 1;
 
+    @include respond(tablet) {
+      font-size: 36px;
+    }
+
     @include respond(mobile) {
       font-size: 36px;
     }
@@ -46,6 +55,10 @@
     height: 14px;
     color: $accent;
     margin-top: 4px;
+
+    @include respond(tablet) {
+      width: 150px;
+    }
 
     @include respond(mobile) {
       width: 150px;
@@ -68,6 +81,11 @@
     width: 28px;
     height: 28px;
     flex-shrink: 0;
+
+    @include respond(tablet) {
+      width: 22px;
+      height: 22px;
+    }
   }
 
   &__group-title {
@@ -75,6 +93,10 @@
     font-size: 20px;
     font-weight: 700;
     color: $text-dark;
+
+    @include respond(tablet) {
+      font-size: 17px;
+    }
   }
 
   &__options {
@@ -84,6 +106,11 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+
+    @include respond(tablet) {
+      padding-left: 28px;
+      gap: 6px;
+    }
   }
 
   &__option {
@@ -96,6 +123,10 @@
       color: $text-dark;
       cursor: pointer;
       user-select: none;
+
+      @include respond(tablet) {
+        font-size: 14px;
+      }
     }
 
     input[type='radio'] {
@@ -204,7 +235,7 @@
     gap: $spacing-md;
     padding: $spacing-lg $spacing-md;
 
-    @include respond(tablet) {
+    @include respond(mobile) {
       background: transparent;
       padding: $spacing-md;
     }
@@ -215,7 +246,7 @@
     display: flex;
     justify-content: center;
 
-    @include respond(tablet) {
+    @include respond(mobile) {
       display: none;
     }
   }
