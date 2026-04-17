@@ -45,6 +45,10 @@
     --win-title-case: none;
     --win-player-blue: #{$game-player-blue-alt};
     --win-player-orange: #{$game-player-orange-alt};
+    --win-title-blue: #{$text-light};
+    --win-title-orange: #{$text-light};
+    --win-title-font: 'Figtree', sans-serif;
+    --win-title-weight: 700;
   }
 
   &--foods {
@@ -57,6 +61,10 @@
     --win-title-case: none;
     --win-player-blue: #{$game-player-blue-alt};
     --win-player-orange: #{$game-player-orange-alt};
+    --win-title-blue: #{$game-text-foods};
+    --win-title-orange: #{$game-text-foods};
+    --win-title-font: 'Klee One', cursive;
+    --win-title-weight: 600;
   }
 
   &__content {
@@ -68,7 +76,7 @@
   }
 
   &__subtitle {
-    font-family: $font-heading;
+    font-family: var(--win-title-font, #{$font-heading});
     font-size: clamp(1rem, 3vw, 1.5rem);
     font-weight: 400;
     color: var(--win-text);
@@ -76,19 +84,19 @@
   }
 
   &__title {
-    font-family: $font-heading;
-    font-size: clamp(2rem, 8vw, 4rem);
-    font-weight: 700;
+    font-family: var(--win-title-font, #{$font-heading});
+    font-size: clamp(2rem, 8vw, 5rem);
+    font-weight: var(--win-title-weight, 700);
     text-transform: var(--win-title-case, none);
     margin: 0;
-    line-height: 1.1;
+    line-height: 1;
 
     &--blue {
-      color: var(--win-player-blue);
+      color: var(--win-title-blue, var(--win-player-blue));
     }
 
     &--orange {
-      color: var(--win-player-orange);
+      color: var(--win-title-orange, var(--win-player-orange));
     }
   }
 
@@ -97,9 +105,11 @@
     width: 200px;
     height: 250px;
 
-    svg {
+    svg,
+    img {
       width: 100%;
       height: 100%;
+      object-fit: contain;
     }
 
     &--blue {
