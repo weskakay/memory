@@ -8,6 +8,9 @@ interface BtnStyle {
   color: string;
   radius: number;
   shadow: string;
+  bgHover?: string;
+  borderHover?: string;
+  colorHover?: string;
 }
 
 interface PopupConfig {
@@ -48,10 +51,12 @@ const POPUP_CONFIGS: Record<ThemeName, PopupConfig> = {
     back: {
       width: 200, height: 43, bg: '#ED1B76', border: '#E71C4F',
       color: '#fff', radius: 10, shadow: 'none',
+      bgHover: '#FFE8F1', borderHover: '#E71C4F', colorHover: '#ED1B76',
     },
     exit: {
       width: 174, height: 42, bg: 'rgba(237,27,118,0.08)', border: '#E71C4F',
       color: '#ED1B76', radius: 9, shadow: 'none',
+      bgHover: '#ED1B76', borderHover: '#E71C4F', colorHover: '#fff',
     },
   },
   daprojects: {
@@ -89,7 +94,20 @@ const POPUP_CONFIGS: Record<ThemeName, PopupConfig> = {
 };
 
 function btnStyles(s: BtnStyle): string {
-  return `width:${s.width}px;height:${s.height}px;background:${s.bg};border:2px solid ${s.border};border-radius:${s.radius}px;color:${s.color};box-shadow:${s.shadow};`;
+  const hasHover = Boolean(s.bgHover);
+  return [
+    `width:${s.width}px`,
+    `height:${s.height}px`,
+    `--btn-bg:${s.bg}`,
+    `--btn-border:${s.border}`,
+    `--btn-color:${s.color}`,
+    `--btn-bg-hover:${s.bgHover ?? s.bg}`,
+    `--btn-border-hover:${s.borderHover ?? s.border}`,
+    `--btn-color-hover:${s.colorHover ?? s.color}`,
+    `--btn-filter-hover:${hasHover ? 'none' : 'brightness(0.92)'}`,
+    `border-radius:${s.radius}px`,
+    `box-shadow:${s.shadow}`,
+  ].join(';') + ';';
 }
 
 export function showExitPopup(

@@ -135,3 +135,23 @@ export const CODING_ICONS: Record<string, string> = {
 </svg>`,
 
 };
+
+// ─── Helper fuer img-basierte Theme-Icons ────────────────────────────────────
+
+function imgIcon(theme: string, name: string): string {
+  return `<img src="/assets/${theme}/${name}.png" alt="" class="card__icon" draggable="false" />`;
+}
+
+function buildIconMap(theme: string, prefix: string, count: number): Record<string, string> {
+  const map: Record<string, string> = {};
+  for (let i = 1; i <= count; i++) {
+    map[`${prefix}-${i}`] = imgIcon(theme, `${prefix}-${i}`);
+  }
+  return map;
+}
+
+// ─── Gaming / DA Projects / Foods Theme Icons (PNG via <img>) ────────────────
+
+export const GAMING_ICONS:     Record<string, string> = buildIconMap('gaming', 'game', 18);
+export const DAPROJECTS_ICONS: Record<string, string> = {};
+export const FOODS_ICONS:      Record<string, string> = {};

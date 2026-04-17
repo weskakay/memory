@@ -12,7 +12,7 @@ export function renderGameOver(
   scores: { blue: number; orange: number },
   onRestart: (() => void) | null
 ): void {
-  const buttonText = theme === 'coding' ? 'Back to start' : 'Home';
+  const buttonText = 'Back to start';
 
   container.innerHTML = `
     <main class="game-over game-over--${theme}">

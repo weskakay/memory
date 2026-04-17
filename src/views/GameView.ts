@@ -2,7 +2,14 @@ import type { GameConfig, ThemeName, PlayerColor } from '../types/types';
 import { Game } from '../models/Game';
 import { GameService } from '../services/GameService';
 import { showExitPopup } from './PopupView';
-import { CODING_ICONS } from '../services/CardIcons';
+import { CODING_ICONS, GAMING_ICONS, DAPROJECTS_ICONS, FOODS_ICONS } from '../services/CardIcons';
+
+const THEME_ICONS: Record<ThemeName, Record<string, string>> = {
+  coding:     CODING_ICONS,
+  gaming:     GAMING_ICONS,
+  daprojects: DAPROJECTS_ICONS,
+  foods:      FOODS_ICONS,
+};
 
 const SCORE_ICON_CODING = `
   <svg viewBox="0 0 24 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -123,10 +130,8 @@ export function renderGame(
 
   const cards = game.board.cards
     .map(card => {
-      const frontContent =
-        config.theme === 'coding' && CODING_ICONS[card.emoji]
-          ? CODING_ICONS[card.emoji]
-          : `<span class="card__emoji">${card.emoji}</span>`;
+      const icon = THEME_ICONS[config.theme][card.emoji];
+      const frontContent = icon ?? `<span class="card__emoji">${card.emoji}</span>`;
       return `
         <div class="card" data-id="${card.id}" aria-label="Card">
           <div class="card__inner">

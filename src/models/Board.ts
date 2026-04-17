@@ -2,10 +2,10 @@ import type { BoardSize, ThemeName } from '../types/types';
 import { Card } from './Card';
 
 const THEME_EMOJIS: Record<ThemeName, string[]> = {
-  coding: ['angular', 'typescript', 'javascript', 'html', 'vscode', 'css', 'django', 'npm', 'terminal', 'python', 'github', 'nodejs', 'bootstrap', 'vue', 'react', 'sass', 'database', 'firebase'],
-  gaming: ['🎮', '🕹️', '🎲', '🏆', '⚔️', '🛡️', '🎯', '🏹', '💣', '👾', '🎪', '🃏', '♟️', '🎰', '🎳', '🏅', '🎖️', '🎭'],
-  daprojects: ['📋', '🗂️', '📌', '🎨', '🧩', '📐', '✏️', '📝', '🔍', '🗃️', '📎', '🖇️', '📑', '🏗️', '🧱', '🔩', '⚙️', '🛞'],
-  foods: ['🍕', '🍔', '🌮', '🍣', '🧁', '🍩', '🥗', '🍜', '🥐', '🍿', '🧀', '🍇', '🥑', '🌽', '🍪', '🎂', '🥝', '🍫'],
+  coding:     ['angular', 'typescript', 'javascript', 'html', 'vscode', 'css', 'django', 'npm', 'terminal', 'python', 'github', 'nodejs', 'bootstrap', 'vue', 'react', 'sass', 'database', 'firebase'],
+  gaming:     ['game-1', 'game-2', 'game-3', 'game-4', 'game-5', 'game-6', 'game-7', 'game-8', 'game-9', 'game-10', 'game-11', 'game-12', 'game-13', 'game-14', 'game-15', 'game-16', 'game-17', 'game-18'],
+  daprojects: ['clipboard', 'calendar', 'barchart', 'lightbulb', 'rocket', 'chat', 'checkmark', 'bug', 'gitbranch', 'merge', 'wireframe', 'folder', 'timer', 'users', 'bookmark', 'database', 'code', 'gear'],
+  foods:      ['pizza', 'burger', 'sushi', 'taco', 'donut', 'coffee', 'icecream', 'cake', 'pasta', 'salad', 'fries', 'hotdog', 'sandwich', 'popcorn', 'waffle', 'cupcake', 'cookie', 'pretzel'],
 };
 
 export class Board {

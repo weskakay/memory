@@ -229,6 +229,11 @@
       color: $text-light;
     }
 
+    .game--gaming &:hover {
+      background: var(--exit-bg);
+      color: var(--exit-accent);
+    }
+
     &:focus-visible {
       outline: 2px solid var(--exit-accent);
       outline-offset: 3px;

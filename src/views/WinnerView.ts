@@ -7,6 +7,23 @@ const PAWN_ICON = `
   </svg>
 `;
 
+const TROPHY_ICON = `
+  <svg viewBox="0 0 200 250" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M30 18 H170 L148 128 Q100 162 100 162 Q100 162 52 128 Z"/>
+    <path d="M30 34 Q4 34 4 78 Q4 122 30 112" stroke="currentColor" stroke-width="16" fill="none" stroke-linecap="round"/>
+    <path d="M170 34 Q196 34 196 78 Q196 122 170 112" stroke="currentColor" stroke-width="16" fill="none" stroke-linecap="round"/>
+    <rect x="88" y="162" width="24" height="42"/>
+    <rect x="55" y="204" width="90" height="24" rx="10"/>
+  </svg>
+`;
+
+const THEME_WINNER_ICON: Record<ThemeName, string> = {
+  coding:     PAWN_ICON,
+  gaming:     TROPHY_ICON,
+  daprojects: PAWN_ICON,
+  foods:      PAWN_ICON,
+};
+
 
 function launchConfetti(): () => void {
   const duration = 4000;
@@ -32,7 +49,6 @@ export function renderWinner(
   onRestart: () => void
 ): void {
   const winnerName = winner === 'blue' ? 'Blue Player' : 'Orange Player';
-  const buttonText = theme === 'coding' ? 'Back to start' : 'Home';
 
   container.innerHTML = `
     <main class="winner winner--${theme}">
@@ -41,11 +57,11 @@ export function renderWinner(
         <h1 class="winner__title winner__title--${winner}">${winnerName}</h1>
 
         <div class="winner__icon winner__icon--${winner}">
-          ${PAWN_ICON}
+          ${THEME_WINNER_ICON[theme]}
         </div>
 
-        <button class="winner__btn winner__btn--action" type="button" aria-label="${buttonText}">
-          ${buttonText}
+        <button class="winner__btn winner__btn--action" type="button" aria-label="Back to start">
+          Back to start
         </button>
       </section>
     </main>
