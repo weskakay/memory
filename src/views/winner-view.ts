@@ -56,6 +56,10 @@ function launchConfetti(): () => void {
   };
 }
 
+/**
+ * Render the Winner screen celebrating the given player.
+ * Launches confetti for the coding theme and invokes onRestart when the user returns home.
+ */
 export function renderWinner(
   container: HTMLElement,
   theme: ThemeName,

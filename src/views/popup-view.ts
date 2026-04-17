@@ -110,72 +110,55 @@ function btnStyles(s: BtnStyle): string {
   ].join(';') + ';';
 }
 
+function buildPopupHTML(theme: ThemeName, c: PopupConfig): string {
+  return `
+    <div class="popup__dialog popup__dialog--${theme}" style="width: ${c.width}px; background: ${c.bg}; border-radius: ${c.radius}px;">
+      <p class="popup__text" style="color: ${c.textColor};">Are you sure you want to quit the game?</p>
+      <div class="popup__actions">
+        <button class="popup__btn popup__btn--back" type="button" style="${btnStyles(c.back)}">${c.backLabel}</button>
+        <button class="popup__btn popup__btn--exit" type="button" style="${btnStyles(c.exit)}">${c.exitLabel}</button>
+      </div>
+    </div>
+  `;
+}
+
+function bindPopupEvents(
+  overlay: HTMLElement,
+  onBack: () => void,
+  onExit: () => void
+): void {
+  const backBtn = overlay.querySelector<HTMLButtonElement>('.popup__btn--back');
+  const exitBtn = overlay.querySelector<HTMLButtonElement>('.popup__btn--exit');
+  const dialog = overlay.querySelector<HTMLElement>('.popup__dialog');
+
+  const close = (): void => {
+    overlay.remove();
+    document.removeEventListener('keydown', handleKey);
+  };
+  const handleKey = (e: KeyboardEvent): void => {
+    if (e.key === 'Escape') { close(); onBack(); }
+  };
+
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) { close(); onBack(); } });
+  dialog?.addEventListener('click', (e) => e.stopPropagation());
+  backBtn?.addEventListener('click', () => { close(); onBack(); });
+  exitBtn?.addEventListener('click', () => { close(); onExit(); });
+  document.addEventListener('keydown', handleKey);
+}
+
+/**
+ * Show the exit confirmation popup for the current theme.
+ * Invokes onBack when dismissed (back button, overlay click, Escape) or onExit when exit is confirmed.
+ */
 export function showExitPopup(
   container: HTMLElement,
   theme: ThemeName,
   onBack: () => void,
   onExit: () => void
 ): void {
-  const c = POPUP_CONFIGS[theme];
-
   const overlay = document.createElement('div');
   overlay.className = 'popup';
-  overlay.innerHTML = `
-    <div class="popup__dialog popup__dialog--${theme}" style="
-      width: ${c.width}px;
-      background: ${c.bg};
-      border-radius: ${c.radius}px;
-    ">
-      <p class="popup__text" style="color: ${c.textColor};">
-        Are you sure you want to quit the game?
-      </p>
-      <div class="popup__actions">
-        <button class="popup__btn popup__btn--back" type="button"
-          style="${btnStyles(c.back)}">${c.backLabel}</button>
-        <button class="popup__btn popup__btn--exit" type="button"
-          style="${btnStyles(c.exit)}">${c.exitLabel}</button>
-      </div>
-    </div>
-  `;
-
+  overlay.innerHTML = buildPopupHTML(theme, POPUP_CONFIGS[theme]);
   container.appendChild(overlay);
-
-  const dialog = overlay.querySelector<HTMLElement>('.popup__dialog');
-  const backBtn = overlay.querySelector<HTMLButtonElement>('.popup__btn--back');
-  const exitBtn = overlay.querySelector<HTMLButtonElement>('.popup__btn--exit');
-
-  function close(): void {
-    overlay.remove();
-    document.removeEventListener('keydown', handleKey);
-  }
-
-  function handleKey(e: KeyboardEvent): void {
-    if (e.key === 'Escape') {
-      close();
-      onBack();
-    }
-  }
-
-  overlay.addEventListener('click', (e: Event) => {
-    if (e.target === overlay) {
-      close();
-      onBack();
-    }
-  });
-
-  dialog?.addEventListener('click', (e: Event) => {
-    e.stopPropagation();
-  });
-
-  backBtn?.addEventListener('click', () => {
-    close();
-    onBack();
-  });
-
-  exitBtn?.addEventListener('click', () => {
-    close();
-    onExit();
-  });
-
-  document.addEventListener('keydown', handleKey);
+  bindPopupEvents(overlay, onBack, onExit);
 }

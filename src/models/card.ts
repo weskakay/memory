@@ -1,3 +1,6 @@
+/**
+ * A single memory card. Cards with the same pairId form a matching pair.
+ */
 export class Card {
   readonly id: number;
   readonly pairId: number;

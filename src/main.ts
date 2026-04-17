@@ -1,9 +1,9 @@
 import './scss/main.scss';
-import { renderHome } from './views/HomeView';
-import { renderSettings } from './views/SettingsView';
-import { renderGame } from './views/GameView';
-import { renderGameOver } from './views/GameOverView';
-import { renderWinner } from './views/WinnerView';
+import { renderHome } from './views/home-view';
+import { renderSettings } from './views/settings-view';
+import { renderGame } from './views/game-view';
+import { renderGameOver } from './views/game-over-view';
+import { renderWinner } from './views/winner-view';
 import type { GameConfig, ThemeName, PlayerColor } from './types/types';
 
 const WINNER_DELAY_MS = 3000;

@@ -1,3 +1,7 @@
+/**
+ * Render the Home screen with the Play call-to-action.
+ * Invokes onPlay when the user clicks the play button.
+ */
 export function renderHome(container: HTMLElement, onPlay: () => void): void {
   container.innerHTML = `
     <main class="home">

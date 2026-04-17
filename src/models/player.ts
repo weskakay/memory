@@ -1,5 +1,8 @@
 import type { PlayerColor } from '../types/types';
 
+/**
+ * A player in the memory game. Identified by colour, tracks their match score.
+ */
 export class Player {
   readonly name: string;
   readonly color: PlayerColor;

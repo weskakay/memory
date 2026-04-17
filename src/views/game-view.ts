@@ -1,8 +1,8 @@
 import type { GameConfig, ThemeName, PlayerColor } from '../types/types';
-import { Game } from '../models/Game';
-import { GameService } from '../services/GameService';
-import { showExitPopup } from './PopupView';
-import { CODING_ICONS, GAMING_ICONS, DAPROJECTS_ICONS, FOODS_ICONS } from '../services/CardIcons';
+import { Game } from '../models/game';
+import { GameService } from '../services/game-service';
+import { showExitPopup } from './popup-view';
+import { CODING_ICONS, GAMING_ICONS, DAPROJECTS_ICONS, FOODS_ICONS } from '../services/card-icons';
 
 const THEME_ICONS: Record<ThemeName, Record<string, string>> = {
   coding:     CODING_ICONS,
@@ -116,6 +116,59 @@ function renderScoresBox(theme: ThemeName, blueScore: number, orangeScore: numbe
   return `<div class="game__scores-box">${inner}</div>`;
 }
 
+function renderSingleCard(theme: ThemeName, card: { id: number; emoji: string }, cardBack: string): string {
+  const icon = THEME_ICONS[theme][card.emoji];
+  const frontContent = icon ?? `<span class="card__emoji">${card.emoji}</span>`;
+  return `
+    <div class="card" data-id="${card.id}" aria-label="Card">
+      <div class="card__inner">
+        <div class="card__face card__face--back">${cardBack}</div>
+        <div class="card__face card__face--front">${frontContent}</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderCardsHTML(game: Game, theme: ThemeName): string {
+  const cardBack = renderCardBack(theme);
+  return game.board.cards.map(card => renderSingleCard(theme, card, cardBack)).join('');
+}
+
+function renderGameHeader(theme: ThemeName, blueScore: number, orangeScore: number, currentColor: PlayerColor): string {
+  return `
+    <header class="game__header">
+      ${renderScoresBox(theme, blueScore, orangeScore)}
+      <div class="game__current">
+        <span class="game__current-label">Current player:</span>
+        <span class="game__current-box game__current-box--${currentColor}">${CURRENT_ICONS[theme]}</span>
+      </div>
+      <button class="game__exit" type="button" aria-label="Exit game">${EXIT_ICON}Exit game</button>
+    </header>
+  `;
+}
+
+function bindExitButton(container: HTMLElement, theme: ThemeName, onExit: () => void): void {
+  const exitBtn = container.querySelector<HTMLButtonElement>('.game__exit');
+  exitBtn?.addEventListener('click', () => {
+    showExitPopup(container, theme, () => {}, () => onExit());
+  });
+}
+
+function bindBoardClicks(container: HTMLElement, service: GameService): void {
+  const board = container.querySelector<HTMLElement>('.game__board');
+  board?.addEventListener('click', (e: Event) => {
+    const target = (e.target as HTMLElement).closest<HTMLElement>('.card');
+    if (!target) return;
+    const id = target.dataset.id;
+    if (id == null) return;
+    service.handleCardClick(Number(id));
+  });
+}
+
+/**
+ * Render the Game screen for the given config and wire up card clicks and the exit popup.
+ * Invokes onGameOver or onWinner via the GameService when the board is completed.
+ */
 export function renderGame(
   container: HTMLElement,
   config: GameConfig,
@@ -125,70 +178,16 @@ export function renderGame(
 ): void {
   const game = new Game(config);
   const [blue, orange] = game.players;
-  const currentColor: PlayerColor = game.currentPlayer.color;
-  const cardBack = renderCardBack(config.theme);
-
-  const cards = game.board.cards
-    .map(card => {
-      const icon = THEME_ICONS[config.theme][card.emoji];
-      const frontContent = icon ?? `<span class="card__emoji">${card.emoji}</span>`;
-      return `
-        <div class="card" data-id="${card.id}" aria-label="Card">
-          <div class="card__inner">
-            <div class="card__face card__face--back">
-              ${cardBack}
-            </div>
-            <div class="card__face card__face--front">
-              ${frontContent}
-            </div>
-          </div>
-        </div>
-      `;
-    })
-    .join('');
-
+  const header = renderGameHeader(config.theme, blue.score, orange.score, game.currentPlayer.color);
   container.innerHTML = `
     <main class="game game--${config.theme}">
-      <header class="game__header">
-        ${renderScoresBox(config.theme, blue.score, orange.score)}
-
-        <div class="game__current">
-          <span class="game__current-label">Current player:</span>
-          <span class="game__current-box game__current-box--${currentColor}">
-            ${CURRENT_ICONS[config.theme]}
-          </span>
-        </div>
-
-        <button class="game__exit" type="button" aria-label="Exit game">
-          ${EXIT_ICON}
-          Exit game
-        </button>
-      </header>
-
+      ${header}
       <section class="game__board game__board--${config.boardSize}" aria-label="Memory board">
-        ${cards}
+        ${renderCardsHTML(game, config.theme)}
       </section>
     </main>
   `;
-
-  const exitBtn = container.querySelector<HTMLButtonElement>('.game__exit');
-  exitBtn?.addEventListener('click', () => {
-    showExitPopup(
-      container,
-      config.theme,
-      () => {},
-      () => onExit()
-    );
-  });
-
-  const board = container.querySelector<HTMLElement>('.game__board');
+  bindExitButton(container, config.theme, onExit);
   const service = new GameService(game, container, config.theme, onGameOver, onWinner);
-
-  board?.addEventListener('click', (e: Event) => {
-    const target = (e.target as HTMLElement).closest<HTMLElement>('.card');
-    if (!target) return;
-    const id = target.dataset.id;
-    if (id == null) return;
-    service.handleCardClick(Number(id));
-  });
+  bindBoardClicks(container, service);
 }

@@ -194,198 +194,192 @@ function previewTag(tagType: 'chevron' | 'pawn', color: 'blue' | 'orange'): stri
   return `<span class="settings__preview-tag ${shapeClass} ${colorClass}">${inner}</span>`;
 }
 
-function renderPreview(theme: ThemeName): string {
-  const t = PREVIEW_THEME[theme];
-  const previewStyle = [
-    `--preview-bg: ${t.bg}`,
-    `--preview-header-bg: ${t.headerBg}`,
-    `--preview-score-box-bg: ${t.scoreBoxBg}`,
-    `--preview-player-blue: ${t.playerBlue}`,
-    `--preview-player-orange: ${t.playerOrange}`,
-    `--preview-body-text: ${t.bodyText}`,
-    `--preview-card-back: ${t.cardBack}`,
-    `--preview-card-back-icon: ${t.cardBackIconColor}`,
-    `--preview-card-back-rotate: ${t.cardBackRotate}`,
-    `--preview-card-front: ${t.cardFront}`,
-    `--preview-card-front-rotate: ${t.cardFrontRotate}`,
-    `--preview-card-width: ${t.cardWidth}`,
-    `--preview-card-aspect: ${t.cardAspect}`,
-    `--preview-card-radius: ${t.cardRadius}`,
-    `--preview-card-icon: ${t.cardIconColor}`,
-    `--preview-icon-size: ${t.cardIconSize}`,
-    `--preview-card-image: ${t.cardFrontImage}`,
-    `--preview-exit-bg: ${t.exitBg}`,
-    `--preview-exit-border: ${t.exitBorder}`,
-    `--preview-exit-text: ${t.exitText}`,
-    `--preview-exit-icon: ${t.exitIconColor}`,
-  ].join('; ');
+function buildPreviewStyle(t: PreviewTheme): string {
+  const vars: Record<string, string> = {
+    'bg': t.bg, 'header-bg': t.headerBg, 'score-box-bg': t.scoreBoxBg,
+    'player-blue': t.playerBlue, 'player-orange': t.playerOrange,
+    'body-text': t.bodyText, 'card-back': t.cardBack,
+    'card-back-icon': t.cardBackIconColor, 'card-back-rotate': t.cardBackRotate,
+    'card-front': t.cardFront, 'card-front-rotate': t.cardFrontRotate,
+    'card-width': t.cardWidth, 'card-aspect': t.cardAspect, 'card-radius': t.cardRadius,
+    'card-icon': t.cardIconColor, 'icon-size': t.cardIconSize, 'card-image': t.cardFrontImage,
+    'exit-bg': t.exitBg, 'exit-border': t.exitBorder,
+    'exit-text': t.exitText, 'exit-icon': t.exitIconColor,
+  };
+  return Object.entries(vars).map(([k, v]) => `--preview-${k}: ${v}`).join('; ');
+}
 
+function previewScoresBox(theme: ThemeName, t: PreviewTheme): string {
   const blueTag = previewTag(t.tagType, 'blue');
   const orangeTag = previewTag(t.tagType, 'orange');
-  const isCodingOrder = theme === 'coding';
-  const firstTag = isCodingOrder ? blueTag : orangeTag;
-  const firstLabel = isCodingOrder ? 'Blue' : 'Orange';
-  const firstColor = isCodingOrder ? 'blue' : 'orange';
-  const secondTag = isCodingOrder ? orangeTag : blueTag;
-  const secondLabel = isCodingOrder ? 'Orange' : 'Blue';
-  const secondColor = isCodingOrder ? 'orange' : 'blue';
+  const codingOrder = theme === 'coding';
+  const first = codingOrder ? { tag: blueTag, label: 'Blue', color: 'blue' } : { tag: orangeTag, label: 'Orange', color: 'orange' };
+  const second = codingOrder ? { tag: orangeTag, label: 'Orange', color: 'orange' } : { tag: blueTag, label: 'Blue', color: 'blue' };
+  return `<div class="settings__preview-scores-box">${first.tag}<span class="settings__preview-text settings__preview-text--${first.color}">${first.label}</span><span class="settings__preview-text settings__preview-text--${first.color}">0</span>${second.tag}<span class="settings__preview-text settings__preview-text--${second.color}">${second.label}</span><span class="settings__preview-text settings__preview-text--${second.color}">0</span></div>`;
+}
 
+function previewExitBlock(): string {
   return `
-    <div class="settings__preview" style="${previewStyle}">
-      <div class="settings__preview-header">
-        <div class="settings__preview-scores-box">
-          ${firstTag}
-          <span class="settings__preview-text settings__preview-text--${firstColor}">${firstLabel}</span>
-          <span class="settings__preview-text settings__preview-text--${firstColor}">0</span>
-          ${secondTag}
-          <span class="settings__preview-text settings__preview-text--${secondColor}">${secondLabel}</span>
-          <span class="settings__preview-text settings__preview-text--${secondColor}">0</span>
-        </div>
-        <div class="settings__preview-current">
-          <span class="settings__preview-current-label">Current player:</span>
-          ${blueTag}
-        </div>
-        <div class="settings__preview-exit">
-          <svg viewBox="0 0 11 9" fill="currentColor" aria-hidden="true">
-            <path d="M8.575 5H3C2.85833 5 2.73958 4.95208 2.64375 4.85625C2.54792 4.76042 2.5 4.64167 2.5 4.5C2.5 4.35833 2.54792 4.23958 2.64375 4.14375C2.73958 4.04792 2.85833 4 3 4H8.575L8.15 3.575C8.05 3.475 8.00208 3.35833 8.00625 3.225C8.01042 3.09167 8.05833 2.975 8.15 2.875C8.25 2.775 8.36875 2.72292 8.50625 2.71875C8.64375 2.71458 8.7625 2.7625 8.8625 2.8625L10.15 4.15C10.25 4.25 10.3 4.36667 10.3 4.5C10.3 4.63333 10.25 4.75 10.15 4.85L8.8625 6.1375C8.7625 6.2375 8.64375 6.28542 8.50625 6.28125C8.36875 6.27708 8.25 6.225 8.15 6.125C8.05833 6.025 8.01042 5.90833 8.00625 5.775C8.00208 5.64167 8.05 5.525 8.15 5.425L8.575 5ZM6 2.5V1H1V8H6V6.5C6 6.35833 6.04792 6.23958 6.14375 6.14375C6.23958 6.04792 6.35833 6 6.5 6C6.64167 6 6.76042 6.04792 6.85625 6.14375C6.95208 6.23958 7 6.35833 7 6.5V8C7 8.275 6.90208 8.51042 6.70625 8.70625C6.51042 8.90208 6.275 9 6 9H1C0.725 9 0.489583 8.90208 0.29375 8.70625C0.0979167 8.51042 0 8.275 0 8V1C0 0.725 0.0979167 0.489583 0.29375 0.29375C0.489583 0.0979167 0.725 0 1 0H6C6.275 0 6.51042 0.0979167 6.70625 0.29375C6.90208 0.489583 7 0.725 7 1V2.5C7 2.64167 6.95208 2.76042 6.85625 2.85625C6.76042 2.95208 6.64167 3 6.5 3C6.35833 3 6.23958 2.95208 6.14375 2.85625C6.04792 2.76042 6 2.64167 6 2.5Z"/>
-          </svg>
-          <span>Exit game</span>
-        </div>
-      </div>
-      <div class="settings__preview-cards">
-        <div class="settings__preview-card settings__preview-card--back">
-          ${theme === 'gaming' ? '' : PREVIEW_BACK_MASK}
-        </div>
-        <div class="settings__preview-card settings__preview-card--front">
-          ${PREVIEW_FRONT_ICONS[theme]}
-        </div>
-      </div>
+    <div class="settings__preview-exit">
+      <svg viewBox="0 0 11 9" fill="currentColor" aria-hidden="true">
+        <path d="M8.575 5H3C2.85833 5 2.73958 4.95208 2.64375 4.85625C2.54792 4.76042 2.5 4.64167 2.5 4.5C2.5 4.35833 2.54792 4.23958 2.64375 4.14375C2.73958 4.04792 2.85833 4 3 4H8.575L8.15 3.575C8.05 3.475 8.00208 3.35833 8.00625 3.225C8.01042 3.09167 8.05833 2.975 8.15 2.875C8.25 2.775 8.36875 2.72292 8.50625 2.71875C8.64375 2.71458 8.7625 2.7625 8.8625 2.8625L10.15 4.15C10.25 4.25 10.3 4.36667 10.3 4.5C10.3 4.63333 10.25 4.75 10.15 4.85L8.8625 6.1375C8.7625 6.2375 8.64375 6.28542 8.50625 6.28125C8.36875 6.27708 8.25 6.225 8.15 6.125C8.05833 6.025 8.01042 5.90833 8.00625 5.775C8.00208 5.64167 8.05 5.525 8.15 5.425L8.575 5ZM6 2.5V1H1V8H6V6.5C6 6.35833 6.04792 6.23958 6.14375 6.14375C6.23958 6.04792 6.35833 6 6.5 6C6.64167 6 6.76042 6.04792 6.85625 6.14375C6.95208 6.23958 7 6.35833 7 6.5V8C7 8.275 6.90208 8.51042 6.70625 8.70625C6.51042 8.90208 6.275 9 6 9H1C0.725 9 0.489583 8.90208 0.29375 8.70625C0.0979167 8.51042 0 8.275 0 8V1C0 0.725 0.0979167 0.489583 0.29375 0.29375C0.489583 0.0979167 0.725 0 1 0H6C6.275 0 6.51042 0.0979167 6.70625 0.29375C6.90208 0.489583 7 0.725 7 1V2.5C7 2.64167 6.95208 2.76042 6.85625 2.85625C6.76042 2.95208 6.64167 3 6.5 3C6.35833 3 6.23958 2.95208 6.14375 2.85625C6.04792 2.76042 6 2.64167 6 2.5Z"/>
+      </svg>
+      <span>Exit game</span>
     </div>
   `;
 }
 
+function renderPreviewHeader(theme: ThemeName, t: PreviewTheme): string {
+  return `
+    <div class="settings__preview-header">
+      ${previewScoresBox(theme, t)}
+      <div class="settings__preview-current">
+        <span class="settings__preview-current-label">Current player:</span>
+        ${previewTag(t.tagType, 'blue')}
+      </div>
+      ${previewExitBlock()}
+    </div>
+  `;
+}
+
+function renderPreviewCards(theme: ThemeName): string {
+  const backMask = theme === 'gaming' ? '' : PREVIEW_BACK_MASK;
+  return `
+    <div class="settings__preview-cards">
+      <div class="settings__preview-card settings__preview-card--back">${backMask}</div>
+      <div class="settings__preview-card settings__preview-card--front">${PREVIEW_FRONT_ICONS[theme]}</div>
+    </div>
+  `;
+}
+
+function renderPreview(theme: ThemeName): string {
+  const t = PREVIEW_THEME[theme];
+  return `
+    <div class="settings__preview" style="${buildPreviewStyle(t)}">
+      ${renderPreviewHeader(theme, t)}
+      ${renderPreviewCards(theme)}
+    </div>
+  `;
+}
+
+function renderOption(name: string, value: string, label: string, checked: boolean): string {
+  return `
+    <li class="settings__option">
+      <label class="settings__option-label">
+        <input type="radio" name="${name}" value="${value}" ${checked ? 'checked' : ''}>
+        <span class="settings__option-text">${label}</span>
+        <span class="settings__option-arrow" aria-hidden="true">${OPTION_ARROW}</span>
+      </label>
+    </li>
+  `;
+}
+
+function renderGroup(icon: string, title: string, options: string): string {
+  return `
+    <section class="settings__group">
+      <header class="settings__group-header">
+        ${icon}
+        <h2 class="settings__group-title">${title}</h2>
+      </header>
+      <ul class="settings__options">${options}</ul>
+    </section>
+  `;
+}
+
+function renderThemeGroup(config: GameConfig): string {
+  const options = (Object.keys(THEME_LABELS) as ThemeName[])
+    .map(key => renderOption('theme', key, THEME_LABELS[key], key === config.theme))
+    .join('');
+  return renderGroup(ICON_PALETTE, 'Game themes', options);
+}
+
+function renderPlayerGroup(config: GameConfig): string {
+  const labels: Record<PlayerColor, string> = { blue: 'Blue', orange: 'Orange' };
+  const options = (['blue', 'orange'] as PlayerColor[])
+    .map(c => renderOption('player', c, labels[c], config.startingPlayer === c))
+    .join('');
+  return renderGroup(ICON_PAWN, 'Choose player', options);
+}
+
+function renderSizeGroup(config: GameConfig): string {
+  const options = (['16', '24', '36'] as const)
+    .map(s => renderOption('size', s, SIZE_LABELS[s], Number(s) === config.boardSize))
+    .join('');
+  return renderGroup(ICON_CARDS, 'Board size', options);
+}
+
+function renderSettingsLeft(config: GameConfig): string {
+  return `
+    <div class="settings__left">
+      <h1 class="settings__title">Settings${TITLE_UNDERLINE}</h1>
+      ${renderThemeGroup(config)}
+      ${renderPlayerGroup(config)}
+      ${renderSizeGroup(config)}
+    </div>
+  `;
+}
+
+function renderSettingsRight(config: GameConfig): string {
+  return `
+    <div class="settings__right">
+      <div class="settings__preview-wrap">${renderPreview(config.theme)}</div>
+      <footer class="settings__footer">
+        <nav class="settings__steps" aria-label="Settings sections">
+          <span class="settings__step">Game theme</span>
+          <span class="settings__step">Player</span>
+          <span class="settings__step">Board size</span>
+        </nav>
+        <button class="settings__start">${ICON_SMART_DISPLAY}Start</button>
+      </footer>
+    </div>
+  `;
+}
+
+function readConfigFromDOM(container: HTMLElement, config: GameConfig): GameConfig {
+  const themeEl = container.querySelector('input[name="theme"]:checked') as HTMLInputElement | null;
+  const playerEl = container.querySelector('input[name="player"]:checked') as HTMLInputElement | null;
+  const sizeEl = container.querySelector('input[name="size"]:checked') as HTMLInputElement | null;
+  if (themeEl) config.theme = themeEl.value as ThemeName;
+  if (playerEl) config.startingPlayer = playerEl.value as PlayerColor;
+  if (sizeEl) config.boardSize = parseInt(sizeEl.value, 10) as BoardSize;
+  return { ...config };
+}
+
+function updatePreview(container: HTMLElement, theme: ThemeName): void {
+  const wrap = container.querySelector('.settings__preview-wrap');
+  if (wrap) wrap.innerHTML = renderPreview(theme);
+}
+
+function bindSettingsEvents(
+  container: HTMLElement,
+  config: GameConfig,
+  onStart: (config: GameConfig) => void
+): void {
+  container.querySelector('.settings__start')?.addEventListener('click', () => {
+    onStart(readConfigFromDOM(container, config));
+  });
+  container.querySelectorAll('input[type="radio"]').forEach(input => {
+    input.addEventListener('change', () => {
+      readConfigFromDOM(container, config);
+      updatePreview(container, config.theme);
+    });
+  });
+}
+
+/**
+ * Render the Settings screen (theme, player colour, board size) and wire it up.
+ * Calls onStart with the chosen config when the user clicks Start.
+ */
 export function renderSettings(
   container: HTMLElement,
   onStart: (config: GameConfig) => void
 ): void {
-  const config: GameConfig = {
-    theme: 'coding',
-    boardSize: 16,
-    startingPlayer: 'blue',
-  };
-
+  const config: GameConfig = { theme: 'coding', boardSize: 16, startingPlayer: 'blue' };
   container.innerHTML = `
     <main class="settings">
-      <div class="settings__left">
-        <h1 class="settings__title">
-          Settings
-          ${TITLE_UNDERLINE}
-        </h1>
-
-        <section class="settings__group">
-          <header class="settings__group-header">
-            ${ICON_PALETTE}
-            <h2 class="settings__group-title">Game themes</h2>
-          </header>
-          <ul class="settings__options">
-            ${(Object.keys(THEME_LABELS) as ThemeName[]).map(key => `
-              <li class="settings__option">
-                <label class="settings__option-label">
-                  <input type="radio" name="theme" value="${key}" ${key === config.theme ? 'checked' : ''}>
-                  <span class="settings__option-text">${THEME_LABELS[key]}</span>
-                  <span class="settings__option-arrow" aria-hidden="true">${OPTION_ARROW}</span>
-                </label>
-              </li>
-            `).join('')}
-          </ul>
-        </section>
-
-        <section class="settings__group">
-          <header class="settings__group-header">
-            ${ICON_PAWN}
-            <h2 class="settings__group-title">Choose player</h2>
-          </header>
-          <ul class="settings__options">
-            <li class="settings__option">
-              <label class="settings__option-label">
-                <input type="radio" name="player" value="blue" ${config.startingPlayer === 'blue' ? 'checked' : ''}>
-                <span class="settings__option-text">Blue</span>
-                <span class="settings__option-arrow" aria-hidden="true">${OPTION_ARROW}</span>
-              </label>
-            </li>
-            <li class="settings__option">
-              <label class="settings__option-label">
-                <input type="radio" name="player" value="orange" ${config.startingPlayer === 'orange' ? 'checked' : ''}>
-                <span class="settings__option-text">Orange</span>
-                <span class="settings__option-arrow" aria-hidden="true">${OPTION_ARROW}</span>
-              </label>
-            </li>
-          </ul>
-        </section>
-
-        <section class="settings__group">
-          <header class="settings__group-header">
-            ${ICON_CARDS}
-            <h2 class="settings__group-title">Board size</h2>
-          </header>
-          <ul class="settings__options">
-            ${(['16', '24', '36'] as const).map(s => `
-              <li class="settings__option">
-                <label class="settings__option-label">
-                  <input type="radio" name="size" value="${s}" ${Number(s) === config.boardSize ? 'checked' : ''}>
-                  <span class="settings__option-text">${SIZE_LABELS[s]}</span>
-                  <span class="settings__option-arrow" aria-hidden="true">${OPTION_ARROW}</span>
-                </label>
-              </li>
-            `).join('')}
-          </ul>
-        </section>
-      </div>
-
-      <div class="settings__right">
-        <div class="settings__preview-wrap">
-          ${renderPreview(config.theme)}
-        </div>
-        <footer class="settings__footer">
-          <nav class="settings__steps" aria-label="Settings sections">
-            <span class="settings__step">Game theme</span>
-            <span class="settings__step">Player</span>
-            <span class="settings__step">Board size</span>
-          </nav>
-          <button class="settings__start">
-            ${ICON_SMART_DISPLAY}
-            Start
-          </button>
-        </footer>
-      </div>
+      ${renderSettingsLeft(config)}
+      ${renderSettingsRight(config)}
     </main>
   `;
-
-  function getConfigFromDOM(): GameConfig {
-    const themeEl = container.querySelector('input[name="theme"]:checked') as HTMLInputElement | null;
-    const playerEl = container.querySelector('input[name="player"]:checked') as HTMLInputElement | null;
-    const sizeEl = container.querySelector('input[name="size"]:checked') as HTMLInputElement | null;
-
-    if (themeEl) config.theme = themeEl.value as ThemeName;
-    if (playerEl) config.startingPlayer = playerEl.value as PlayerColor;
-    if (sizeEl) config.boardSize = parseInt(sizeEl.value, 10) as BoardSize;
-
-    return { ...config };
-  }
-
-  function updatePreview(): void {
-    const wrap = container.querySelector('.settings__preview-wrap');
-    if (wrap) wrap.innerHTML = renderPreview(config.theme);
-  }
-
-  container.querySelector('.settings__start')?.addEventListener('click', () => {
-    onStart(getConfigFromDOM());
-  });
-
-  container.querySelectorAll('input[type="radio"]').forEach(input => {
-    input.addEventListener('change', () => {
-      getConfigFromDOM();
-      updatePreview();
-    });
-  });
+  bindSettingsEvents(container, config, onStart);
 }

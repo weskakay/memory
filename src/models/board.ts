@@ -1,5 +1,5 @@
 import type { BoardSize, ThemeName } from '../types/types';
-import { Card } from './Card';
+import { Card } from './card';
 
 const THEME_EMOJIS: Record<ThemeName, string[]> = {
   coding:     ['angular', 'typescript', 'javascript', 'html', 'vscode', 'css', 'django', 'npm', 'terminal', 'python', 'github', 'nodejs', 'bootstrap', 'vue', 'react', 'sass', 'database', 'firebase'],
@@ -8,6 +8,9 @@ const THEME_EMOJIS: Record<ThemeName, string[]> = {
   foods:      ['food-1', 'food-2', 'food-3', 'food-4', 'food-5', 'food-6', 'food-7', 'food-8', 'food-9', 'food-10', 'food-11', 'food-12', 'food-13', 'food-14', 'food-15', 'food-16', 'food-17', 'food-18'],
 };
 
+/**
+ * The memory game board. Generates a shuffled card deck for the given size and theme.
+ */
 export class Board {
   readonly size: BoardSize;
   readonly theme: ThemeName;

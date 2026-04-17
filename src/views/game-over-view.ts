@@ -6,6 +6,10 @@ const PAWN_ICON = `
   </svg>
 `;
 
+/**
+ * Render the Game Over screen with final scores.
+ * Pass onRestart=null to render without the restart button (used as transition to winner screen).
+ */
 export function renderGameOver(
   container: HTMLElement,
   theme: ThemeName,

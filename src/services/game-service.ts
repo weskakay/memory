@@ -1,12 +1,16 @@
 import type { ThemeName, PlayerColor } from '../types/types';
-import type { Game } from '../models/Game';
-import type { Card } from '../models/Card';
+import type { Game } from '../models/game';
+import type { Card } from '../models/card';
 
 const FLIP_BACK_DELAY_MS = 1000;
 
 type GameOverCallback = (scores: { blue: number; orange: number }) => void;
 type WinnerCallback = (winner: PlayerColor, scores: { blue: number; orange: number }) => void;
 
+/**
+ * Orchestrates gameplay: handles card clicks, match detection, score updates,
+ * and end-of-game transitions. Bridges the Game model to the rendered DOM.
+ */
 export class GameService {
   private game: Game;
   private container: HTMLElement;
@@ -30,6 +34,7 @@ export class GameService {
     this.onWinner = onWinner;
   }
 
+  /** Handle a card click: flip the card, check for a match once two are face-up. */
   handleCardClick(cardId: number): void {
     if (this.locked) return;
 

@@ -1,7 +1,10 @@
 import type { GameConfig, GameResult } from '../types/types';
-import { Board } from './Board';
-import { Player } from './Player';
+import { Board } from './board';
+import { Player } from './player';
 
+/**
+ * Represents a full memory game session: board, players, and turn state.
+ */
 export class Game {
   readonly board: Board;
   readonly players: [Player, Player];
