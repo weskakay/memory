@@ -153,5 +153,5 @@ function buildIconMap(theme: string, prefix: string, count: number): Record<stri
 // ─── Gaming / DA Projects / Foods Theme Icons (PNG via <img>) ────────────────
 
 export const GAMING_ICONS:     Record<string, string> = buildIconMap('gaming', 'game', 18);
-export const DAPROJECTS_ICONS: Record<string, string> = {};
-export const FOODS_ICONS:      Record<string, string> = {};
+export const DAPROJECTS_ICONS: Record<string, string> = buildIconMap('daprojects', 'da', 18);
+export const FOODS_ICONS:      Record<string, string> = buildIconMap('foods', 'food', 18);
