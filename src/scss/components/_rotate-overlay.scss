@@ -38,16 +38,32 @@
     color: rgba(255, 255, 255, 0.75);
   }
 
-  @media (orientation: landscape) and (max-height: 500px) {
-    display: flex;
+  &__text--rotate {
+    display: none;
   }
 
   @media (max-width: 319px) {
-    display: flex;
+    &[hidden] {
+      display: flex;
+    }
 
     .rotate-overlay__icon {
       animation: none;
       transform: none;
+    }
+  }
+
+  @media (orientation: portrait) and (min-width: 1024px) {
+    &[hidden] {
+      display: flex;
+    }
+
+    .rotate-overlay__text--narrow {
+      display: none;
+    }
+
+    .rotate-overlay__text--rotate {
+      display: block;
     }
   }
 }

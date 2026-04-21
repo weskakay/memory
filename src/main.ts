@@ -8,6 +8,12 @@ import type { GameConfig, ThemeName, PlayerColor } from './types/types';
 
 const WINNER_DELAY_MS = 3000;
 
+const assetBase = import.meta.env.BASE_URL;
+const rootElement = document.documentElement;
+rootElement.style.setProperty('--asset-back-icon', `url(${assetBase}back-icon.png)`);
+rootElement.style.setProperty('--asset-gaming-dice', `url(${assetBase}gaming-dice.png)`);
+rootElement.style.setProperty('--asset-foods-wrap', `url(${assetBase}foods-wrap.png)`);
+
 const app = document.getElementById('app') as HTMLElement;
 if (!app) throw new Error('App container #app not found');
 

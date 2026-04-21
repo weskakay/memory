@@ -139,7 +139,7 @@ export const CODING_ICONS: Record<string, string> = {
 // ─── Helper fuer img-basierte Theme-Icons ────────────────────────────────────
 
 function imgIcon(theme: string, name: string): string {
-  return `<img src="/assets/${theme}/${name}.png" alt="" class="card__icon" draggable="false" />`;
+  return `<img src="${import.meta.env.BASE_URL}assets/${theme}/${name}.png" alt="" class="card__icon" draggable="false" />`;
 }
 
 function buildIconMap(theme: string, prefix: string, count: number): Record<string, string> {

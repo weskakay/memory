@@ -8,7 +8,7 @@ const PAWN_ICON = `
 `;
 
 const TROPHY_ICON = `
-  <img src="/assets/gaming/game-winner.png" alt="" aria-hidden="true">
+  <img src="${import.meta.env.BASE_URL}assets/gaming/game-winner.png" alt="" aria-hidden="true">
 `;
 
 const PAWN_OUTLINE_ICON = `

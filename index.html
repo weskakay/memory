@@ -11,13 +11,14 @@
   </head>
   <body>
     <div id="app"></div>
-    <div class="rotate-overlay" role="status" aria-live="polite">
+    <div class="rotate-overlay" role="status" aria-live="polite" hidden>
       <svg class="rotate-overlay__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
         <path d="M12 18h.01"></path>
       </svg>
       <h2 class="rotate-overlay__title">Please rotate your device</h2>
-      <p class="rotate-overlay__text">This game works best in portrait mode. On very small screens, please use a tablet or laptop.</p>
+      <p class="rotate-overlay__text rotate-overlay__text--narrow">Screen too small &mdash; please use a viewport at least 320px wide.</p>
+      <p class="rotate-overlay__text rotate-overlay__text--rotate">This orientation isn&rsquo;t supported. Rotate to landscape to continue.</p>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

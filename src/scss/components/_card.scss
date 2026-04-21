@@ -58,8 +58,8 @@
       content: '';
       position: absolute;
       inset: 0;
-      mask: url(/back-icon.png) center / 65% no-repeat;
-      -webkit-mask: url(/back-icon.png) center / 65% no-repeat;
+      mask: var(--asset-back-icon) center / 65% no-repeat;
+      -webkit-mask: var(--asset-back-icon) center / 65% no-repeat;
       background-color: rgba(255, 255, 255, 0.3);
     }
 

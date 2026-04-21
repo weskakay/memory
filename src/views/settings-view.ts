@@ -29,6 +29,11 @@ interface PreviewTheme {
   exitBorder: string;
   exitText: string;
   exitIconColor: string;
+  exitRadius: string;
+  currentBoxBgBlue: string;
+  currentBoxBgOrange: string;
+  currentBoxRadius: string;
+  currentBoxIconColor: string;
   tagType: 'chevron' | 'pawn';
 }
 
@@ -55,6 +60,11 @@ const PREVIEW_THEME: Record<ThemeName, PreviewTheme> = {
     exitBorder: '#4dd5bc',
     exitText: '#ffffff',
     exitIconColor: '#ffffff',
+    exitRadius: '0',
+    currentBoxBgBlue: 'transparent',
+    currentBoxBgOrange: 'transparent',
+    currentBoxRadius: '0',
+    currentBoxIconColor: '#2bb1ff',
     tagType: 'chevron',
   },
   gaming: {
@@ -74,11 +84,16 @@ const PREVIEW_THEME: Record<ThemeName, PreviewTheme> = {
     cardRadius: '19px',
     cardIconColor: '#e91e8c',
     cardIconSize: '85%',
-    cardFrontImage: 'url(/gaming-dice.png)',
+    cardFrontImage: 'var(--asset-gaming-dice)',
     exitBg: 'rgba(237, 27, 118, 0.08)',
     exitBorder: '#e71c4f',
     exitText: '#ffffff',
     exitIconColor: '#e71c4f',
+    exitRadius: '5px',
+    currentBoxBgBlue: '#1faafc',
+    currentBoxBgOrange: '#ea6900',
+    currentBoxRadius: '3px',
+    currentBoxIconColor: '#ffffff',
     tagType: 'pawn',
   },
   daprojects: {
@@ -103,11 +118,16 @@ const PREVIEW_THEME: Record<ThemeName, PreviewTheme> = {
     exitBorder: 'transparent',
     exitText: '#1e7594',
     exitIconColor: '#1e7594',
+    exitRadius: '5px',
+    currentBoxBgBlue: '#097fc5',
+    currentBoxBgOrange: '#ea6900',
+    currentBoxRadius: '4px',
+    currentBoxIconColor: '#ffffff',
     tagType: 'pawn',
   },
   foods: {
-    bg: 'linear-gradient(135deg, #ffffff, #fdf6ee)',
-    headerBg: '#f0e5d9',
+    bg: '#e8e2dc',
+    headerBg: '#ffffff',
     scoreBoxBg: '#ffffff',
     playerBlue: '#097fc5',
     playerOrange: '#ea6900',
@@ -122,11 +142,16 @@ const PREVIEW_THEME: Record<ThemeName, PreviewTheme> = {
     cardRadius: '4px',
     cardIconColor: '#a45212',
     cardIconSize: '80%',
-    cardFrontImage: 'url(/foods-wrap.png)',
+    cardFrontImage: 'var(--asset-foods-wrap)',
     exitBg: '#fff9f2',
     exitBorder: '#f3832d',
     exitText: '#f3832d',
     exitIconColor: '#f3832d',
+    exitRadius: '5px',
+    currentBoxBgBlue: '#097fc5',
+    currentBoxBgOrange: '#ea6900',
+    currentBoxRadius: '4px',
+    currentBoxIconColor: '#ffffff',
     tagType: 'pawn',
   },
 };
@@ -194,6 +219,11 @@ function previewTag(tagType: 'chevron' | 'pawn', color: 'blue' | 'orange'): stri
   return `<span class="settings__preview-tag ${shapeClass} ${colorClass}">${inner}</span>`;
 }
 
+function previewCurrentBox(tagType: 'chevron' | 'pawn', color: PlayerColor): string {
+  if (tagType === 'chevron') return previewTag('chevron', color);
+  return `<span class="settings__preview-current-box settings__preview-current-box--${color}">${PREVIEW_PAWN_SMALL}</span>`;
+}
+
 function buildPreviewStyle(t: PreviewTheme): string {
   const vars: Record<string, string> = {
     'bg': t.bg, 'header-bg': t.headerBg, 'score-box-bg': t.scoreBoxBg,
@@ -205,6 +235,11 @@ function buildPreviewStyle(t: PreviewTheme): string {
     'card-icon': t.cardIconColor, 'icon-size': t.cardIconSize, 'card-image': t.cardFrontImage,
     'exit-bg': t.exitBg, 'exit-border': t.exitBorder,
     'exit-text': t.exitText, 'exit-icon': t.exitIconColor,
+    'exit-radius': t.exitRadius,
+    'current-box-bg-blue': t.currentBoxBgBlue,
+    'current-box-bg-orange': t.currentBoxBgOrange,
+    'current-box-radius': t.currentBoxRadius,
+    'current-box-icon': t.currentBoxIconColor,
   };
   return Object.entries(vars).map(([k, v]) => `--preview-${k}: ${v}`).join('; ');
 }
@@ -229,13 +264,13 @@ function previewExitBlock(): string {
   `;
 }
 
-function renderPreviewHeader(theme: ThemeName, t: PreviewTheme): string {
+function renderPreviewHeader(theme: ThemeName, t: PreviewTheme, currentPlayer: PlayerColor): string {
   return `
     <div class="settings__preview-header">
       ${previewScoresBox(theme, t)}
       <div class="settings__preview-current">
         <span class="settings__preview-current-label">Current player:</span>
-        ${previewTag(t.tagType, 'blue')}
+        ${previewCurrentBox(t.tagType, currentPlayer)}
       </div>
       ${previewExitBlock()}
     </div>
@@ -252,11 +287,11 @@ function renderPreviewCards(theme: ThemeName): string {
   `;
 }
 
-function renderPreview(theme: ThemeName): string {
+function renderPreview(theme: ThemeName, currentPlayer: PlayerColor): string {
   const t = PREVIEW_THEME[theme];
   return `
     <div class="settings__preview" style="${buildPreviewStyle(t)}">
-      ${renderPreviewHeader(theme, t)}
+      ${renderPreviewHeader(theme, t, currentPlayer)}
       ${renderPreviewCards(theme)}
     </div>
   `;
@@ -322,7 +357,7 @@ function renderSettingsLeft(config: GameConfig): string {
 function renderSettingsRight(config: GameConfig): string {
   return `
     <div class="settings__right">
-      <div class="settings__preview-wrap">${renderPreview(config.theme)}</div>
+      <div class="settings__preview-wrap">${renderPreview(config.theme, config.startingPlayer)}</div>
       <footer class="settings__footer">
         <nav class="settings__steps" aria-label="Settings sections">
           <span class="settings__step">Game theme</span>
@@ -345,9 +380,9 @@ function readConfigFromDOM(container: HTMLElement, config: GameConfig): GameConf
   return { ...config };
 }
 
-function updatePreview(container: HTMLElement, theme: ThemeName): void {
+function updatePreview(container: HTMLElement, theme: ThemeName, currentPlayer: PlayerColor): void {
   const wrap = container.querySelector('.settings__preview-wrap');
-  if (wrap) wrap.innerHTML = renderPreview(theme);
+  if (wrap) wrap.innerHTML = renderPreview(theme, currentPlayer);
 }
 
 function bindSettingsEvents(
@@ -361,7 +396,7 @@ function bindSettingsEvents(
   container.querySelectorAll('input[type="radio"]').forEach(input => {
     input.addEventListener('change', () => {
       readConfigFromDOM(container, config);
-      updatePreview(container, config.theme);
+      updatePreview(container, config.theme, config.startingPlayer);
     });
   });
 }

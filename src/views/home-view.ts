@@ -5,7 +5,7 @@
 export function renderHome(container: HTMLElement, onPlay: () => void): void {
   container.innerHTML = `
     <main class="home">
-      <img class="home__controller" src="/controller.png" alt="" aria-hidden="true" />
+      <img class="home__controller" src="${import.meta.env.BASE_URL}controller.png" alt="" aria-hidden="true" />
       <div class="home__content">
         <p class="home__subtitle">It's play time.</p>
         <h1 class="home__title">Ready to play?</h1>
