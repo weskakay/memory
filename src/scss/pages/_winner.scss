@@ -2,7 +2,7 @@
 @use '../abstracts/mixins' as *;
 
 .winner {
-  min-height: 100vh;
+  height: 100svh;
   @include flex-center;
   flex-direction: column;
   padding: $spacing-lg;

@@ -3,7 +3,7 @@
 
 .home {
   position: relative;
-  min-height: 100vh;
+  height: 100svh;
   background: $bg-dark;
   overflow: hidden;
   @include flex-center;
