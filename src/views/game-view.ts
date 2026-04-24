@@ -80,10 +80,12 @@ const CARD_BACKS: Record<ThemeName, string> = {
   foods:      `<div class="card__back-face card__back-face--foods"></div>`,
 };
 
+/** Returns the HTML for a card's back face for the given theme. */
 function renderCardBack(theme: ThemeName): string {
   return CARD_BACKS[theme];
 }
 
+/** Builds the Blue player's score badge (icon + name + current score). */
 function renderBlueBadge(theme: ThemeName, score: number): string {
   return `
     <span class="score-badge score-badge--blue">
@@ -94,6 +96,7 @@ function renderBlueBadge(theme: ThemeName, score: number): string {
   `;
 }
 
+/** Builds the Orange player's score badge (icon + name + current score). */
 function renderOrangeBadge(theme: ThemeName, score: number): string {
   return `
     <span class="score-badge score-badge--orange">
@@ -104,6 +107,7 @@ function renderOrangeBadge(theme: ThemeName, score: number): string {
   `;
 }
 
+/** Builds the combined scores box; the coding theme shows Blue first, every other theme shows Orange first. */
 function renderScoresBox(theme: ThemeName, blueScore: number, orangeScore: number): string {
   const blue = renderBlueBadge(theme, blueScore);
   const orange = renderOrangeBadge(theme, orangeScore);
@@ -112,6 +116,7 @@ function renderScoresBox(theme: ThemeName, blueScore: number, orangeScore: numbe
   return `<div class="game__scores-box">${inner}</div>`;
 }
 
+/** Builds the HTML for one playable card (inner flip wrapper with back and front faces). */
 function renderSingleCard(theme: ThemeName, card: { id: number; emoji: string }, cardBack: string): string {
   const icon = THEME_ICONS[theme][card.emoji];
   const frontContent = icon ?? `<span class="card__emoji">${card.emoji}</span>`;
@@ -125,11 +130,13 @@ function renderSingleCard(theme: ThemeName, card: { id: number; emoji: string },
   `;
 }
 
+/** Builds the HTML for all cards on the board by mapping each Card model to its markup. */
 function renderCardsHTML(game: Game, theme: ThemeName): string {
   const cardBack = renderCardBack(theme);
   return game.board.cards.map(card => renderSingleCard(theme, card, cardBack)).join('');
 }
 
+/** Builds the game header (scores box + current-player indicator + exit button). */
 function renderGameHeader(theme: ThemeName, blueScore: number, orangeScore: number, currentColor: PlayerColor): string {
   return `
     <header class="game__header">
@@ -143,6 +150,7 @@ function renderGameHeader(theme: ThemeName, blueScore: number, orangeScore: numb
   `;
 }
 
+/** Wires the exit button: shows the exit-confirmation popup and calls `onExit` when the user confirms. */
 function bindExitButton(container: HTMLElement, theme: ThemeName, onExit: () => void): void {
   const exitBtn = container.querySelector<HTMLButtonElement>('.game__exit');
   exitBtn?.addEventListener('click', () => {
@@ -150,6 +158,7 @@ function bindExitButton(container: HTMLElement, theme: ThemeName, onExit: () => 
   });
 }
 
+/** Delegates click events on the board to the GameService by extracting the card id from the clicked element. */
 function bindBoardClicks(container: HTMLElement, service: GameService): void {
   const board = container.querySelector<HTMLElement>('.game__board');
   board?.addEventListener('click', (e: Event) => {

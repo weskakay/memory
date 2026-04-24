@@ -16,6 +16,7 @@ export class Board {
   readonly theme: ThemeName;
   cards: Card[] = [];
 
+  /** Creates a board of the given size and theme, immediately generating a shuffled deck of pairs. */
   constructor(size: BoardSize, theme: ThemeName) {
     this.size = size;
     this.theme = theme;

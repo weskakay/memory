@@ -6,9 +6,61 @@ const PAWN_ICON = `
   </svg>
 `;
 
+const RESTART_BUTTON_TEXT = 'Back to start';
+
+/** Builds one final-score badge (pawn icon + player score) for the given colour. */
+function buildScoreBadge(color: 'blue' | 'orange', score: number): string {
+  return `
+    <span class="game-over__badge game-over__badge--${color}">
+      ${PAWN_ICON}
+      <span class="game-over__badge-score">${score}</span>
+    </span>
+  `;
+}
+
+/** Builds the final-score section containing the blue and orange badges. */
+function buildScoresSection(scores: { blue: number; orange: number }): string {
+  return `
+    <section class="game-over__scores" aria-label="Final score">
+      <p class="game-over__subtitle">Final score</p>
+      <div class="game-over__badges">
+        ${buildScoreBadge('blue', scores.blue)}
+        ${buildScoreBadge('orange', scores.orange)}
+      </div>
+    </section>
+  `;
+}
+
+/** Builds the restart button, or returns an empty string when `show` is false. */
+function buildRestartButton(show: boolean): string {
+  if (!show) return '';
+  return `<button class="game-over__restart" type="button" aria-label="${RESTART_BUTTON_TEXT}">${RESTART_BUTTON_TEXT}</button>`;
+}
+
 /**
- * Render the Game Over screen with final scores.
- * Pass onRestart=null to render without the restart button (used as transition to winner screen).
+ * Builds the Game Over screen HTML. Pure template function — returns the
+ * markup as a string and performs no DOM access. When `withRestartButton`
+ * is false, the restart button is omitted (used as transition overlay
+ * before the Winner screen).
+ */
+function buildGameOverTemplate(
+  theme: ThemeName,
+  scores: { blue: number; orange: number },
+  withRestartButton: boolean
+): string {
+  return `
+    <main class="game-over game-over--${theme}">
+      <h1 class="game-over__title">Game over</h1>
+      ${buildScoresSection(scores)}
+      ${buildRestartButton(withRestartButton)}
+    </main>
+  `;
+}
+
+/**
+ * Renders the Game Over screen: writes the template HTML into `container`
+ * and binds the restart handler when provided. Pass `onRestart=null` to
+ * render without the restart button (used as transition to winner screen).
  */
 export function renderGameOver(
   container: HTMLElement,
@@ -16,32 +68,10 @@ export function renderGameOver(
   scores: { blue: number; orange: number },
   onRestart: (() => void) | null
 ): void {
-  const buttonText = 'Back to start';
-
-  container.innerHTML = `
-    <main class="game-over game-over--${theme}">
-      <h1 class="game-over__title">Game over</h1>
-
-      <section class="game-over__scores" aria-label="Final score">
-        <p class="game-over__subtitle">Final score</p>
-        <div class="game-over__badges">
-          <span class="game-over__badge game-over__badge--blue">
-            ${PAWN_ICON}
-            <span class="game-over__badge-score">${scores.blue}</span>
-          </span>
-          <span class="game-over__badge game-over__badge--orange">
-            ${PAWN_ICON}
-            <span class="game-over__badge-score">${scores.orange}</span>
-          </span>
-        </div>
-      </section>
-
-      ${onRestart ? `<button class="game-over__restart" type="button" aria-label="${buttonText}">${buttonText}</button>` : ''}
-    </main>
-  `;
+  container.innerHTML = buildGameOverTemplate(theme, scores, onRestart !== null);
 
   if (onRestart) {
-    const btn = container.querySelector<HTMLButtonElement>('.game-over__restart');
-    btn?.addEventListener('click', () => onRestart());
+    container.querySelector<HTMLButtonElement>('.game-over__restart')
+      ?.addEventListener('click', () => onRestart());
   }
 }

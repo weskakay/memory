@@ -8,6 +8,7 @@ export class Card {
   isFlipped: boolean = false;
   isMatched: boolean = false;
 
+  /** Creates a card with a unique id, a pairId shared with its matching partner, and an icon key. */
   constructor(id: number, pairId: number, emoji: string) {
     this.id = id;
     this.pairId = pairId;

@@ -1,8 +1,11 @@
 // Theme card icons served as PNG exports from public/assets/<theme>/.
 
+/** Maximum number of unique icons per theme (largest board is 36 cards = 18 pairs). */
+const ICONS_PER_THEME = 18;
+
 /** Returns an <img> tag for a PNG icon in the public assets folder. */
 function imgIcon(theme: string, name: string): string {
-  return `<img src="${import.meta.env.BASE_URL}assets/${theme}/${name}.png" alt="" class="card__icon" draggable="false" />`;
+  return `<img src="${import.meta.env.BASE_URL}assets/${theme}/${name}.png" alt="" aria-hidden="true" class="card__icon" draggable="false" />`;
 }
 
 /** Builds an icon map with keys `<prefix>-1` through `<prefix>-<count>` mapped to imgIcon(theme, key). */
@@ -14,7 +17,7 @@ function buildIconMap(theme: string, prefix: string, count: number): Record<stri
   return map;
 }
 
-export const CODING_ICONS:     Record<string, string> = buildIconMap('coding', 'c', 18);
-export const GAMING_ICONS:     Record<string, string> = buildIconMap('gaming', 'game', 18);
-export const DAPROJECTS_ICONS: Record<string, string> = buildIconMap('daprojects', 'da', 18);
-export const FOODS_ICONS:      Record<string, string> = buildIconMap('foods', 'food', 18);
+export const CODING_ICONS:     Record<string, string> = buildIconMap('coding', 'c', ICONS_PER_THEME);
+export const GAMING_ICONS:     Record<string, string> = buildIconMap('gaming', 'game', ICONS_PER_THEME);
+export const DAPROJECTS_ICONS: Record<string, string> = buildIconMap('daprojects', 'da', ICONS_PER_THEME);
+export const FOODS_ICONS:      Record<string, string> = buildIconMap('foods', 'food', ICONS_PER_THEME);

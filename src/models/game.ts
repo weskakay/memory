@@ -10,6 +10,10 @@ export class Game {
   readonly players: [Player, Player];
   private currentPlayerIndex: number = 0;
 
+  /**
+   * Creates a new game from the given config. Builds the board, instantiates
+   * both players, and sets the starting turn based on `config.startingPlayer`.
+   */
   constructor(config: GameConfig) {
     this.board = new Board(config.boardSize, config.theme);
     this.players = [new Player('blue'), new Player('orange')];
@@ -42,6 +46,7 @@ export class Game {
     };
   }
 
+  /** Resolves final scores to a game outcome: the higher-score colour wins, equal scores are a draw. */
   private determineWinner(blue: number, orange: number): GameOutcome {
     if (blue > orange) return 'blue';
     if (orange > blue) return 'orange';

@@ -24,7 +24,7 @@
     --go-title-case: none;
     --go-title-style: italic;
     --go-title-spacing: normal;
-    --go-scorebox-bg: rgba(#{red($gameover-scorebox-coding)}, #{green($gameover-scorebox-coding)}, #{blue($gameover-scorebox-coding)}, 0.2);
+    --go-scorebox-bg: #{rgba($gameover-scorebox-coding, 0.2)};
     --go-scorebox-radius: 0;
     --go-badge-blue: #{$game-player-blue-coding};
     --go-badge-orange: #{$game-player-orange-coding};

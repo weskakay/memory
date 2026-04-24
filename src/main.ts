@@ -17,14 +17,20 @@ rootElement.style.setProperty('--asset-foods-wrap', `url(${assetBase}foods-wrap.
 const app = document.getElementById('app') as HTMLElement;
 if (!app) throw new Error('App container #app not found');
 
+/** Shows the Home screen. Wires the Play button to open the Settings screen. */
 function showHome(): void {
   renderHome(app, () => showSettings());
 }
 
+/** Shows the Settings screen. Starts the game with the chosen config on Start. */
 function showSettings(): void {
   renderSettings(app, (config: GameConfig) => showGame(config));
 }
 
+/**
+ * Shows the Game screen for the given config. The Exit button returns to Settings;
+ * when the board is completed, `showEndSequence` runs with the final outcome.
+ */
 function showGame(config: GameConfig): void {
   renderGame(
     app,
@@ -34,6 +40,10 @@ function showGame(config: GameConfig): void {
   );
 }
 
+/**
+ * Runs the end-of-game transition: shows Game-Over without a restart button,
+ * then swaps to the Winner screen after `WINNER_DELAY_MS`.
+ */
 function showEndSequence(
   theme: ThemeName,
   outcome: GameOutcome,
@@ -43,6 +53,7 @@ function showEndSequence(
   setTimeout(() => showWinner(theme, outcome), WINNER_DELAY_MS);
 }
 
+/** Shows the Winner screen with confetti; the action button returns to Home. */
 function showWinner(theme: ThemeName, outcome: GameOutcome): void {
   renderWinner(app, theme, outcome, () => showHome());
 }

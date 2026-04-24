@@ -18,6 +18,11 @@ export class GameService {
   private locked = false;
   private flippedCards: Card[] = [];
 
+  /**
+   * Wires the service to a concrete game session. `container` is the root
+   * Game-screen element the service queries and mutates; `theme` governs the
+   * badge order when updating scores; `onEnd` fires once every card is matched.
+   */
   constructor(
     game: Game,
     container: HTMLElement,

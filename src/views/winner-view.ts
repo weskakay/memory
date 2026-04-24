@@ -39,11 +39,11 @@ const THEME_BTN_LABEL: Record<ThemeName, string> = {
 };
 
 const DRAW_COLORS = ['#2c6bf5', '#f57c1f', '#4c8df6', '#ffaa55'];
+const CONFETTI_DURATION_MS = 4000;
 
 /** Launches a bilateral confetti cannon and returns a teardown callback. */
 function launchConfetti(colors?: string[]): () => void {
-  const duration = 4000;
-  const end = Date.now() + duration;
+  const end = Date.now() + CONFETTI_DURATION_MS;
   const palette = colors ?? ['#e74c3c', '#f1c40f', '#2ecc71', '#3498db', '#9b59b6'];
   let frameId: number;
 
@@ -90,35 +90,40 @@ function buildWinnerParts(theme: ThemeName, outcome: GameOutcome): WinnerParts {
   };
 }
 
-/** Renders the Winner screen HTML for the given outcome and theme. */
+/** Builds the inner content of the winner screen (subtitle, title, icon, action button). */
+function buildWinnerContent(parts: WinnerParts, btnLabel: string): string {
+  return `
+    <section class="winner__content">
+      <p class="winner__subtitle">${parts.subtitle}</p>
+      <h1 class="winner__title winner__title--${parts.titleModifier}">${parts.title}</h1>
+      <div class="winner__icon winner__icon--${parts.iconModifier}">
+        ${parts.iconHTML}
+      </div>
+      <button class="winner__btn winner__btn--action" type="button" aria-label="${btnLabel}">
+        ${btnLabel}
+      </button>
+    </section>
+  `;
+}
+
+/** Builds the Winner screen HTML string for the given theme, parts and button label. */
 function buildWinnerTemplate(theme: ThemeName, parts: WinnerParts, btnLabel: string): string {
   return `
     <main class="winner winner--${theme}">
-      <section class="winner__content">
-        <p class="winner__subtitle">${parts.subtitle}</p>
-        <h1 class="winner__title winner__title--${parts.titleModifier}">${parts.title}</h1>
-
-        <div class="winner__icon winner__icon--${parts.iconModifier}">
-          ${parts.iconHTML}
-        </div>
-
-        <button class="winner__btn winner__btn--action" type="button" aria-label="${btnLabel}">
-          ${btnLabel}
-        </button>
-      </section>
+      ${buildWinnerContent(parts, btnLabel)}
     </main>
   `;
 }
 
-/** Returns a confetti teardown for the coding theme (all outcomes), null for other themes. */
-function maybeLaunchConfetti(theme: ThemeName, outcome: GameOutcome): (() => void) | null {
-  if (theme !== 'coding') return null;
+/** Starts the confetti animation and returns a teardown callback. Draw uses the two-tone palette, a win uses the default colourful palette. */
+function launchOutcomeConfetti(outcome: GameOutcome): () => void {
   return launchConfetti(outcome === 'draw' ? DRAW_COLORS : undefined);
 }
 
 /**
- * Render the Winner screen for the given outcome (winner color or draw).
- * Launches confetti for the coding theme winners and for every draw.
+ * Renders the Winner screen for the given outcome (winner colour or draw).
+ * Starts confetti regardless of theme; draw outcomes use the two-tone palette,
+ * wins use the default colourful palette.
  */
 export function renderWinner(
   container: HTMLElement,
@@ -128,7 +133,7 @@ export function renderWinner(
 ): void {
   const parts = buildWinnerParts(theme, outcome);
   container.innerHTML = buildWinnerTemplate(theme, parts, THEME_BTN_LABEL[theme]);
-  const stopConfetti = maybeLaunchConfetti(theme, outcome);
+  const stopConfetti = launchOutcomeConfetti(outcome);
   container.querySelector<HTMLButtonElement>('.winner__btn--action')
-    ?.addEventListener('click', () => { stopConfetti?.(); onRestart(); });
+    ?.addEventListener('click', () => { stopConfetti(); onRestart(); });
 }

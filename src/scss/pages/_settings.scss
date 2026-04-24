@@ -646,10 +646,12 @@
 }
 
 // Large landscape screens with real vertical room (iPad Pro 1366x1024,
-// desktop monitors). The min-height guard keeps the scale-up from firing
-// on short 1200-1400 wide viewports (e.g. 1228x780), where the bigger
-// stepper + Start button wouldn't fit on one line in the footer bar.
-@media (orientation: landscape) and (min-width: 1200px) and (min-height: 900px) {
+// desktop monitors). The 1366 min-width matches the narrowest target
+// device (iPad Pro landscape); below that the bigger stepper + Start
+// button would overflow the 560px right column and clip the last step.
+// The min-height guard keeps the scale-up from firing on short desktop
+// monitors (e.g. 1366x768) where the bigger typography eats the viewport.
+@media (orientation: landscape) and (min-width: 1366px) and (min-height: 900px) {
   .settings__title {
     font-size: 56px;
   }
@@ -670,6 +672,11 @@
 
   .settings__option-label {
     font-size: 18px;
+  }
+
+  .settings__left,
+  .settings__right {
+    max-width: 680px;
   }
 
   .settings__preview {

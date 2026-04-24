@@ -1,5 +1,8 @@
 import type { GameConfig, ThemeName, BoardSize, PlayerColor } from '../types/types';
 
+/** Delay before starting the game, long enough to let the Start button's spin animation finish (matches @keyframes settings-start-spin in _settings.scss). */
+const START_BUTTON_SPIN_MS = 350;
+
 const THEME_LABELS: Record<ThemeName, string> = {
   coding: 'Codes Theme',
   gaming: 'Games Theme',
@@ -233,6 +236,7 @@ const PREVIEW_BACK_MASK = `<span class="settings__preview-back-mask"></span>`;
 
 const PREVIEW_PAWN_SMALL = `<svg viewBox="0 0 22 27" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M2.66667 26.6667C1.93333 26.6667 1.30556 26.4056 0.783333 25.8833C0.261111 25.3611 0 24.7333 0 24V21.3667C0 20.9222 0.1 20.5111 0.3 20.1333C0.5 19.7556 0.766667 19.4333 1.1 19.1667C2.63333 17.9222 3.78333 16.6667 4.55 15.4C5.31667 14.1333 5.85556 13 6.16667 12H4C3.62222 12 3.30556 11.8722 3.05 11.6167C2.79444 11.3611 2.66667 11.0444 2.66667 10.6667C2.66667 10.2889 2.79444 9.97222 3.05 9.71667C3.30556 9.46111 3.62222 9.33333 4 9.33333H5.66667C5.35556 8.84444 5.11111 8.32222 4.93333 7.76667C4.75556 7.21111 4.66667 6.62222 4.66667 6C4.66667 4.33333 5.25 2.91667 6.41667 1.75C7.58333 0.583333 9 0 10.6667 0C12.3333 0 13.75 0.583333 14.9167 1.75C16.0833 2.91667 16.6667 4.33333 16.6667 6C16.6667 6.62222 16.5778 7.21111 16.4 7.76667C16.2222 8.32222 15.9778 8.84444 15.6667 9.33333H17.3333C17.7111 9.33333 18.0278 9.46111 18.2833 9.71667C18.5389 9.97222 18.6667 10.2889 18.6667 10.6667C18.6667 11.0444 18.5389 11.3611 18.2833 11.6167C18.0278 11.8722 17.7111 12 17.3333 12H15.1667C15.4778 13 16.0167 14.1333 16.7833 15.4C17.55 16.6667 18.7 17.9222 20.2333 19.1667C20.5667 19.4333 20.8333 19.7556 21.0333 20.1333C21.2333 20.5111 21.3333 20.9222 21.3333 21.3667V24C21.3333 24.7333 21.0722 25.3611 20.55 25.8833C20.0278 26.4056 19.4 26.6667 18.6667 26.6667H2.66667ZM2.66667 24H18.6667V21.3333C16.6222 19.7333 15.1444 18.0833 14.2333 16.3833C13.3222 14.6833 12.7111 13.2222 12.4 12H8.93333C8.62222 13.2222 8.01111 14.6833 7.1 16.3833C6.18889 18.0833 4.71111 19.7333 2.66667 21.3333V24ZM10.6667 9.33333C11.6 9.33333 12.3889 9.01111 13.0333 8.36667C13.6778 7.72222 14 6.93333 14 6C14 5.06667 13.6778 4.27778 13.0333 3.63333C12.3889 2.98889 11.6 2.66667 10.6667 2.66667C9.73333 2.66667 8.94444 2.98889 8.3 3.63333C7.65556 4.27778 7.33333 5.06667 7.33333 6C7.33333 6.93333 7.65556 7.72222 8.3 8.36667C8.94444 9.01111 9.73333 9.33333 10.6667 9.33333Z"/></svg>`;
 
+/** Returns the HTML for a player tag (chevron or pawn shape) in the preview scores box. */
 function previewTag(tagType: 'chevron' | 'pawn', color: 'blue' | 'orange'): string {
   const shapeClass = tagType === 'pawn' ? 'settings__preview-tag--pawn' : 'settings__preview-tag--chevron';
   const colorClass = `settings__preview-tag--${color}`;
@@ -240,31 +244,35 @@ function previewTag(tagType: 'chevron' | 'pawn', color: 'blue' | 'orange'): stri
   return `<span class="settings__preview-tag ${shapeClass} ${colorClass}">${inner}</span>`;
 }
 
+/** Returns the HTML for the "current player" indicator box in the preview header. */
 function previewCurrentBox(tagType: 'chevron' | 'pawn', color: PlayerColor): string {
   if (tagType === 'chevron') return previewTag('chevron', color);
   return `<span class="settings__preview-current-box settings__preview-current-box--${color}">${PREVIEW_PAWN_SMALL}</span>`;
 }
 
+/** Maps each PreviewTheme property to its corresponding `--preview-*` CSS variable name (kebab-case). */
+const PREVIEW_CSS_VAR_MAP: Array<[keyof PreviewTheme, string]> = [
+  ['bg', 'bg'], ['headerBg', 'header-bg'], ['scoreBoxBg', 'score-box-bg'],
+  ['playerBlue', 'player-blue'], ['playerOrange', 'player-orange'],
+  ['bodyText', 'body-text'], ['cardBack', 'card-back'],
+  ['cardBackIconColor', 'card-back-icon'], ['cardBackRotate', 'card-back-rotate'],
+  ['cardFront', 'card-front'], ['cardFrontRotate', 'card-front-rotate'],
+  ['cardWidth', 'card-width'], ['cardAspect', 'card-aspect'], ['cardRadius', 'card-radius'],
+  ['cardIconColor', 'card-icon'], ['cardIconSize', 'icon-size'], ['cardFrontImage', 'card-image'],
+  ['exitBg', 'exit-bg'], ['exitBorder', 'exit-border'],
+  ['exitText', 'exit-text'], ['exitIconColor', 'exit-icon'], ['exitRadius', 'exit-radius'],
+  ['currentBoxBgBlue', 'current-box-bg-blue'], ['currentBoxBgOrange', 'current-box-bg-orange'],
+  ['currentBoxRadius', 'current-box-radius'], ['currentBoxIconColor', 'current-box-icon'],
+];
+
+/** Serialises a PreviewTheme into the `--preview-*` CSS custom properties applied inline to the preview element. */
 function buildPreviewStyle(t: PreviewTheme): string {
-  const vars: Record<string, string> = {
-    'bg': t.bg, 'header-bg': t.headerBg, 'score-box-bg': t.scoreBoxBg,
-    'player-blue': t.playerBlue, 'player-orange': t.playerOrange,
-    'body-text': t.bodyText, 'card-back': t.cardBack,
-    'card-back-icon': t.cardBackIconColor, 'card-back-rotate': t.cardBackRotate,
-    'card-front': t.cardFront, 'card-front-rotate': t.cardFrontRotate,
-    'card-width': t.cardWidth, 'card-aspect': t.cardAspect, 'card-radius': t.cardRadius,
-    'card-icon': t.cardIconColor, 'icon-size': t.cardIconSize, 'card-image': t.cardFrontImage,
-    'exit-bg': t.exitBg, 'exit-border': t.exitBorder,
-    'exit-text': t.exitText, 'exit-icon': t.exitIconColor,
-    'exit-radius': t.exitRadius,
-    'current-box-bg-blue': t.currentBoxBgBlue,
-    'current-box-bg-orange': t.currentBoxBgOrange,
-    'current-box-radius': t.currentBoxRadius,
-    'current-box-icon': t.currentBoxIconColor,
-  };
-  return Object.entries(vars).map(([k, v]) => `--preview-${k}: ${v}`).join('; ');
+  return PREVIEW_CSS_VAR_MAP
+    .map(([key, cssVar]) => `--preview-${cssVar}: ${t[key]}`)
+    .join('; ');
 }
 
+/** Builds the two-player scores box in the preview header. The coding theme shows Blue first, every other theme shows Orange first. */
 function previewScoresBox(theme: ThemeName, t: PreviewTheme): string {
   const blueTag = previewTag(t.tagType, 'blue');
   const orangeTag = previewTag(t.tagType, 'orange');
@@ -274,6 +282,7 @@ function previewScoresBox(theme: ThemeName, t: PreviewTheme): string {
   return `<div class="settings__preview-scores-box">${first.tag}<span class="settings__preview-text settings__preview-text--${first.color}">${first.label}</span><span class="settings__preview-text settings__preview-text--${first.color}">0</span>${second.tag}<span class="settings__preview-text settings__preview-text--${second.color}">${second.label}</span><span class="settings__preview-text settings__preview-text--${second.color}">0</span></div>`;
 }
 
+/** Returns the HTML for the decorative "Exit game" button shown inside the preview header. */
 function previewExitBlock(): string {
   return `
     <div class="settings__preview-exit">
@@ -285,6 +294,7 @@ function previewExitBlock(): string {
   `;
 }
 
+/** Builds the preview header (scores box + current-player indicator + exit button). */
 function renderPreviewHeader(theme: ThemeName, t: PreviewTheme, currentPlayer: PlayerColor): string {
   return `
     <div class="settings__preview-header">
@@ -298,6 +308,7 @@ function renderPreviewHeader(theme: ThemeName, t: PreviewTheme, currentPlayer: P
   `;
 }
 
+/** Builds the preview's card-stack area (back-mask + front card). The gaming theme omits the back-mask overlay. */
 function renderPreviewCards(theme: ThemeName): string {
   const backMask = theme === 'gaming' ? '' : PREVIEW_BACK_MASK;
   return `
@@ -308,6 +319,7 @@ function renderPreviewCards(theme: ThemeName): string {
   `;
 }
 
+/** Builds the full preview box (header + cards) for the chosen theme and starting player. */
 function renderPreview(theme: ThemeName, currentPlayer: PlayerColor): string {
   const t = PREVIEW_THEME[theme];
   return `
@@ -318,6 +330,7 @@ function renderPreview(theme: ThemeName, currentPlayer: PlayerColor): string {
   `;
 }
 
+/** Builds a single radio-option list item for a settings group. */
 function renderOption(name: string, value: string, label: string, checked: boolean): string {
   return `
     <li class="settings__option">
@@ -330,6 +343,7 @@ function renderOption(name: string, value: string, label: string, checked: boole
   `;
 }
 
+/** Wraps a group header (icon + title) and its option list into a settings section. */
 function renderGroup(icon: string, title: string, options: string): string {
   return `
     <section class="settings__group">
@@ -342,6 +356,7 @@ function renderGroup(icon: string, title: string, options: string): string {
   `;
 }
 
+/** Builds the "Game themes" radio group with the current theme pre-selected. */
 function renderThemeGroup(config: GameConfig): string {
   const options = (Object.keys(THEME_LABELS) as ThemeName[])
     .map(key => renderOption('theme', key, THEME_LABELS[key], key === config.theme))
@@ -349,6 +364,7 @@ function renderThemeGroup(config: GameConfig): string {
   return renderGroup(ICON_PALETTE, 'Game themes', options);
 }
 
+/** Builds the "Choose player" radio group with the current starting player pre-selected. */
 function renderPlayerGroup(config: GameConfig): string {
   const labels: Record<PlayerColor, string> = { blue: 'Blue', orange: 'Orange' };
   const options = (['blue', 'orange'] as PlayerColor[])
@@ -357,6 +373,7 @@ function renderPlayerGroup(config: GameConfig): string {
   return renderGroup(ICON_PAWN, 'Choose player', options);
 }
 
+/** Builds the "Board size" radio group (16 / 24 / 36 cards) with the current size pre-selected. */
 function renderSizeGroup(config: GameConfig): string {
   const options = (['16', '24', '36'] as const)
     .map(s => renderOption('size', s, SIZE_LABELS[s], Number(s) === config.boardSize))
@@ -364,6 +381,7 @@ function renderSizeGroup(config: GameConfig): string {
   return renderGroup(ICON_CARDS, 'Board size', options);
 }
 
+/** Builds the left column of the settings page (title + all three radio groups). */
 function renderSettingsLeft(config: GameConfig): string {
   return `
     <div class="settings__left">
@@ -377,6 +395,7 @@ function renderSettingsLeft(config: GameConfig): string {
   `;
 }
 
+/** Builds the right column of the settings page (preview box + footer with steps and the Start button). */
 function renderSettingsRight(config: GameConfig): string {
   return `
     <div class="settings__right">
@@ -391,11 +410,13 @@ function renderSettingsRight(config: GameConfig): string {
   `;
 }
 
+/** Re-renders the footer steps inline (no full re-render) when a setting changes. */
 function updateFooter(container: HTMLElement, config: GameConfig): void {
   const steps = container.querySelector('.settings__steps');
   if (steps) steps.innerHTML = buildFooterSteps(config);
 }
 
+/** Reads the currently checked radio values and returns an updated GameConfig; mutates `config` in place and returns a copy. */
 function readConfigFromDOM(container: HTMLElement, config: GameConfig): GameConfig {
   const themeEl = container.querySelector('input[name="theme"]:checked') as HTMLInputElement | null;
   const playerEl = container.querySelector('input[name="player"]:checked') as HTMLInputElement | null;
@@ -406,12 +427,14 @@ function readConfigFromDOM(container: HTMLElement, config: GameConfig): GameConf
   return { ...config };
 }
 
+/** Re-renders only the preview box when theme or starting player changes (cheaper than a full settings re-render). */
 function updatePreview(container: HTMLElement, theme: ThemeName, currentPlayer: PlayerColor): void {
   const wrap = container.querySelector('.settings__preview-wrap');
   if (wrap) wrap.innerHTML = renderPreview(theme, currentPlayer);
 }
 
-function bindSettingsEvents(
+/** Wires the Start button: triggers the spin animation, then invokes `onStart` with the current config. */
+function bindStartButton(
   container: HTMLElement,
   config: GameConfig,
   onStart: (config: GameConfig) => void
@@ -419,8 +442,12 @@ function bindSettingsEvents(
   const startBtn = container.querySelector<HTMLButtonElement>('.settings__start');
   startBtn?.addEventListener('click', () => {
     startBtn.classList.add('settings__start--activating');
-    setTimeout(() => onStart(readConfigFromDOM(container, config)), 350);
+    setTimeout(() => onStart(readConfigFromDOM(container, config)), START_BUTTON_SPIN_MS);
   });
+}
+
+/** Wires every radio input: on change, reads the config and refreshes the preview and footer. */
+function bindRadioChanges(container: HTMLElement, config: GameConfig): void {
   container.querySelectorAll('input[type="radio"]').forEach(input => {
     input.addEventListener('change', () => {
       readConfigFromDOM(container, config);
@@ -428,6 +455,16 @@ function bindSettingsEvents(
       updateFooter(container, config);
     });
   });
+}
+
+/** Wires all settings interactions (Start button + radio changes). */
+function bindSettingsEvents(
+  container: HTMLElement,
+  config: GameConfig,
+  onStart: (config: GameConfig) => void
+): void {
+  bindStartButton(container, config, onStart);
+  bindRadioChanges(container, config);
 }
 
 /** Builds the full Settings screen HTML string for the given config. */

@@ -18,7 +18,7 @@
   &--coding {
     --win-bg: #{$bg-dark};
     --win-text: #{$text-light};
-    --win-btn-bg: rgba(#{red($gameover-scorebox-coding)}, #{green($gameover-scorebox-coding)}, #{blue($gameover-scorebox-coding)}, 0.2);
+    --win-btn-bg: #{rgba($gameover-scorebox-coding, 0.2)};
     --win-btn-border: #{$game-accent-coding};
     --win-btn-text: #{$text-light};
     --win-btn-radius: 0;
