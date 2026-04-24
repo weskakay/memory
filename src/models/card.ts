@@ -14,18 +14,21 @@ export class Card {
     this.emoji = emoji;
   }
 
+  /** Flip the card face-up. No-op if the card is already matched. */
   flip(): void {
     if (!this.isMatched) {
       this.isFlipped = true;
     }
   }
 
+  /** Flip the card face-down. No-op if the card is already matched. */
   unflip(): void {
     if (!this.isMatched) {
       this.isFlipped = false;
     }
   }
 
+  /** Mark the card as permanently matched and face-up. */
   match(): void {
     this.isMatched = true;
     this.isFlipped = true;

@@ -106,6 +106,10 @@
     &--orange {
       color: var(--win-title-orange, var(--win-player-orange));
     }
+
+    &--draw {
+      color: var(--win-text);
+    }
   }
 
   &__icon {
@@ -132,6 +136,43 @@
     &--orange {
       color: var(--win-player-orange);
     }
+
+    &--draw {
+      width: 340px;
+      gap: $spacing-md;
+
+      @include respond(mobile) {
+        width: 240px;
+      }
+    }
+  }
+
+  &__icon-pair {
+    @include flex-center;
+    width: 50%;
+    height: 100%;
+
+    &--blue  { color: var(--win-player-blue); }
+    &--orange { color: var(--win-player-orange); }
+  }
+
+  &__scores {
+    display: flex;
+    gap: $spacing-md;
+    font-family: $font-heading;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  &__score {
+    min-width: 3rem;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $radius-sm;
+    text-align: center;
+    color: $text-light;
+
+    &--blue  { background: var(--win-player-blue); }
+    &--orange { background: var(--win-player-orange); }
   }
 
   &__btn--action {
@@ -148,7 +189,7 @@
 
     @include respond(mobile) {
       padding: $spacing-sm $spacing-md;
-      font-size: 0.9375rem;
+      font-size: 1rem;
     }
 
     &:hover {

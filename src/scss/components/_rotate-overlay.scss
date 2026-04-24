@@ -32,7 +32,7 @@
 
   &__text {
     font-family: $font-body;
-    font-size: 14px;
+    font-size: 16px;
     max-width: 300px;
     margin: 0;
     color: rgba(255, 255, 255, 0.75);
@@ -53,7 +53,27 @@
     }
   }
 
-  @media (orientation: portrait) and (min-width: 1024px) {
+  // Mobile + foldable landscape (Surface Duo 720×540, iPhone SE 667×375 etc.).
+  // Threshold 559 deckt Surface Duo 540 ab und bleibt unter Nest Hub 600.
+  @media (orientation: landscape) and (max-height: 559px) {
+    &[hidden] {
+      display: flex;
+    }
+
+    .rotate-overlay__text--narrow {
+      display: none;
+    }
+
+    .rotate-overlay__text--rotate {
+      display: block;
+    }
+  }
+
+  // Tablet portraits (iPad Mini 768, iPad Air 820, Surface Pro 912, iPad Pro 1024)
+  // don't have enough vertical room for Settings + preview without scrolling,
+  // and all these devices in landscape (1024-1366 wide) render the 2-col layout
+  // perfectly. So we ask the user to rotate.
+  @media (orientation: portrait) and (min-width: 768px) {
     &[hidden] {
       display: flex;
     }

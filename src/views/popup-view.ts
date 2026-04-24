@@ -93,6 +93,7 @@ const POPUP_CONFIGS: Record<ThemeName, PopupConfig> = {
   },
 };
 
+/** Serializes a BtnStyle into inline CSS (including hover custom properties). */
 function btnStyles(s: BtnStyle): string {
   const hasHover = Boolean(s.bgHover);
   return [
@@ -110,6 +111,7 @@ function btnStyles(s: BtnStyle): string {
   ].join(';') + ';';
 }
 
+/** Builds the popup dialog HTML for the given theme. */
 function buildPopupHTML(theme: ThemeName, c: PopupConfig): string {
   return `
     <div class="popup__dialog popup__dialog--${theme}" style="width: ${c.width}px; background: ${c.bg}; border-radius: ${c.radius}px;">
@@ -122,27 +124,33 @@ function buildPopupHTML(theme: ThemeName, c: PopupConfig): string {
   `;
 }
 
-function bindPopupEvents(
-  overlay: HTMLElement,
-  onBack: () => void,
-  onExit: () => void
-): void {
-  const backBtn = overlay.querySelector<HTMLButtonElement>('.popup__btn--back');
-  const exitBtn = overlay.querySelector<HTMLButtonElement>('.popup__btn--exit');
-  const dialog = overlay.querySelector<HTMLElement>('.popup__dialog');
+/** Wires the Back and Exit buttons to close the popup and fire their callbacks. */
+function bindButtons(overlay: HTMLElement, close: () => void, onBack: () => void, onExit: () => void): void {
+  overlay.querySelector<HTMLButtonElement>('.popup__btn--back')
+    ?.addEventListener('click', () => { close(); onBack(); });
+  overlay.querySelector<HTMLButtonElement>('.popup__btn--exit')
+    ?.addEventListener('click', () => { close(); onExit(); });
+}
 
+/** Wires Escape key and overlay-click dismissal. Returns the keydown handler so the caller can unbind it. */
+function bindDismissal(overlay: HTMLElement, close: () => void, onBack: () => void): (e: KeyboardEvent) => void {
+  const dialog = overlay.querySelector<HTMLElement>('.popup__dialog');
+  const handleKey = (e: KeyboardEvent): void => {
+    if (e.key === 'Escape') { close(); onBack(); }
+  };
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) { close(); onBack(); } });
+  dialog?.addEventListener('click', (e) => e.stopPropagation());
+  return handleKey;
+}
+
+/** Wires all interaction handlers (buttons, overlay click, Escape) for the popup. */
+function bindPopupEvents(overlay: HTMLElement, onBack: () => void, onExit: () => void): void {
   const close = (): void => {
     overlay.remove();
     document.removeEventListener('keydown', handleKey);
   };
-  const handleKey = (e: KeyboardEvent): void => {
-    if (e.key === 'Escape') { close(); onBack(); }
-  };
-
-  overlay.addEventListener('click', (e) => { if (e.target === overlay) { close(); onBack(); } });
-  dialog?.addEventListener('click', (e) => e.stopPropagation());
-  backBtn?.addEventListener('click', () => { close(); onBack(); });
-  exitBtn?.addEventListener('click', () => { close(); onExit(); });
+  const handleKey = bindDismissal(overlay, close, onBack);
+  bindButtons(overlay, close, onBack, onExit);
   document.addEventListener('keydown', handleKey);
 }
 
