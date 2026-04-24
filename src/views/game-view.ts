@@ -1,4 +1,4 @@
-import type { GameConfig, ThemeName, PlayerColor } from '../types/types';
+import type { GameConfig, ThemeName, PlayerColor, GameOutcome } from '../types/types';
 import { Game } from '../models/game';
 import { GameService } from '../services/game-service';
 import { showExitPopup } from './popup-view';
@@ -61,31 +61,27 @@ const EXIT_ICON = `
   </svg>
 `;
 
+const CARD_BACK_GAMING = `
+  <svg viewBox="0 0 120 120" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <linearGradient id="cb-gaming" x1="3.4125" y1="0" x2="148.748" y2="196.767" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#ED1B76"/>
+        <stop offset="0.917628" stop-color="#0A2835"/>
+      </linearGradient>
+    </defs>
+    <rect width="120" height="120" fill="url(#cb-gaming)"/>
+  </svg>
+`;
+
+const CARD_BACKS: Record<ThemeName, string> = {
+  coding:     `<div class="card__back-face card__back-face--coding"></div>`,
+  gaming:     CARD_BACK_GAMING,
+  daprojects: `<div class="card__back-face card__back-face--daprojects"></div>`,
+  foods:      `<div class="card__back-face card__back-face--foods"></div>`,
+};
+
 function renderCardBack(theme: ThemeName): string {
-  switch (theme) {
-    case 'coding':
-      return `<div class="card__back-face card__back-face--coding"></div>`;
-    case 'gaming':
-      return `
-        <svg viewBox="0 0 120 120" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <defs>
-            <linearGradient id="cb-gaming" x1="3.4125" y1="0" x2="148.748" y2="196.767" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#ED1B76"/>
-              <stop offset="0.917628" stop-color="#0A2835"/>
-            </linearGradient>
-          </defs>
-          <rect width="120" height="120" fill="url(#cb-gaming)"/>
-        </svg>
-      `;
-    case 'daprojects':
-      return `<div class="card__back-face card__back-face--daprojects"></div>`;
-    case 'foods':
-      return `<div class="card__back-face card__back-face--foods"></div>`;
-    default: {
-      const exhaustive: never = theme;
-      throw new Error(`Unknown theme: ${exhaustive}`);
-    }
-  }
+  return CARD_BACKS[theme];
 }
 
 function renderBlueBadge(theme: ThemeName, score: number): string {
@@ -167,19 +163,25 @@ function bindBoardClicks(container: HTMLElement, service: GameService): void {
 
 /**
  * Render the Game screen for the given config and wire up card clicks and the exit popup.
- * Invokes onGameOver or onWinner via the GameService when the board is completed.
+ * Invokes onEnd with the final outcome ('blue' | 'orange' | 'draw') when the board is completed.
  */
 export function renderGame(
   container: HTMLElement,
   config: GameConfig,
   onExit: () => void,
-  onGameOver: (scores: { blue: number; orange: number }) => void,
-  onWinner: (winner: PlayerColor, scores: { blue: number; orange: number }) => void
+  onEnd: (outcome: GameOutcome, scores: { blue: number; orange: number }) => void
 ): void {
   const game = new Game(config);
+  container.innerHTML = buildGameTemplate(game, config);
+  bindExitButton(container, config.theme, onExit);
+  bindBoardClicks(container, new GameService(game, container, config.theme, onEnd));
+}
+
+/** Builds the full Game screen HTML string for the given game state and config. */
+function buildGameTemplate(game: Game, config: GameConfig): string {
   const [blue, orange] = game.players;
   const header = renderGameHeader(config.theme, blue.score, orange.score, game.currentPlayer.color);
-  container.innerHTML = `
+  return `
     <main class="game game--${config.theme}">
       ${header}
       <section class="game__board game__board--${config.boardSize}" aria-label="Memory board">
@@ -187,7 +189,4 @@ export function renderGame(
       </section>
     </main>
   `;
-  bindExitButton(container, config.theme, onExit);
-  const service = new GameService(game, container, config.theme, onGameOver, onWinner);
-  bindBoardClicks(container, service);
 }

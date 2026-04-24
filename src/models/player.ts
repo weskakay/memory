@@ -13,6 +13,7 @@ export class Player {
     this.name = color === 'blue' ? 'Blue' : 'Orange';
   }
 
+  /** Increase the player's score by one point. */
   addPoint(): void {
     this.score++;
   }

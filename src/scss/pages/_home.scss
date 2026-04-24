@@ -41,6 +41,8 @@
     font-size: 48px;
     color: $text-light;
     margin-bottom: $spacing-sm;
+    opacity: 0;
+    animation: home-fade-in 0.6s ease 0.1s forwards;
 
     @include respond(tablet) {
       font-size: 32px;
@@ -58,6 +60,8 @@
     font-weight: 700;
     line-height: 1;
     margin-bottom: $spacing-xl;
+    opacity: 0;
+    animation: home-fade-in 0.7s ease 0.25s forwards;
 
     @include respond(tablet) {
       font-size: 80px;
@@ -79,10 +83,32 @@
     font-size: 40px;
     padding: 16px 40px;
     border-radius: $radius-md;
-    transition: background 0.2s ease;
+    cursor: pointer;
+    opacity: 0;
+    animation: home-fade-in 0.5s ease 0.5s forwards;
+    transition: transform 0.25s ease, background-color 0.25s ease;
 
-    &:hover {
+    &:hover,
+    &:focus-visible {
       background: $accent-hover;
+      transform: scale(1.05);
+
+      .home__button-icon {
+        transform: rotate(-15deg) scale(1.15);
+      }
+
+      .home__button-arrow {
+        transform: translateX(6px) scale(1.2);
+      }
+    }
+
+    &:focus-visible {
+      outline: 3px solid $text-light;
+      outline-offset: 4px;
+    }
+
+    &:active {
+      transform: scale(0.98);
     }
 
     @include respond(mobile) {
@@ -94,15 +120,54 @@
   &__button-icon {
     width: 36px;
     height: 36px;
+    transform-origin: center;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 
     @include respond(mobile) {
       width: 24px;
       height: 24px;
     }
   }
+
+  &__button-arrow {
+    display: inline-block;
+    transition: transform 0.3s ease;
+  }
 }
 
 @keyframes home-controller-float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-15px); }
+}
+
+@keyframes home-fade-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// Short portrait phones (iPhone SE 667, Galaxy S8+ 740, foldables closed).
+// Shrinks controller + hero so Play button never overlaps the illustration.
+@media (orientation: portrait) and (max-height: 749px) {
+  .home__controller {
+    width: 180px;
+    bottom: 8px;
+  }
+
+  .home__content {
+    transform: translateY(-6%);
+  }
+
+  .home__subtitle {
+    font-size: 18px;
+  }
+
+  .home__title {
+    font-size: 40px;
+    margin-bottom: $spacing-md;
+  }
+
+  .home__button {
+    font-size: 20px;
+    padding: 8px 20px;
+  }
 }

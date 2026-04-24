@@ -1,5 +1,5 @@
 import confetti from 'canvas-confetti';
-import type { ThemeName, PlayerColor } from '../types/types';
+import type { ThemeName, GameOutcome } from '../types/types';
 
 const PAWN_ICON = `
   <svg viewBox="0 0 200 250" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -38,15 +38,18 @@ const THEME_BTN_LABEL: Record<ThemeName, string> = {
   foods:      'Home',
 };
 
+const DRAW_COLORS = ['#2c6bf5', '#f57c1f', '#4c8df6', '#ffaa55'];
 
-function launchConfetti(): () => void {
+/** Launches a bilateral confetti cannon and returns a teardown callback. */
+function launchConfetti(colors?: string[]): () => void {
   const duration = 4000;
   const end = Date.now() + duration;
+  const palette = colors ?? ['#e74c3c', '#f1c40f', '#2ecc71', '#3498db', '#9b59b6'];
   let frameId: number;
 
   (function frame() {
-    confetti({ particleCount: 4, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#e74c3c', '#f1c40f', '#2ecc71', '#3498db', '#9b59b6'] });
-    confetti({ particleCount: 4, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#e74c3c', '#f1c40f', '#2ecc71', '#3498db', '#9b59b6'] });
+    confetti({ particleCount: 4, angle: 60, spread: 55, origin: { x: 0 }, colors: palette });
+    confetti({ particleCount: 4, angle: 120, spread: 55, origin: { x: 1 }, colors: palette });
     if (Date.now() < end) frameId = requestAnimationFrame(frame);
   })();
 
@@ -56,44 +59,76 @@ function launchConfetti(): () => void {
   };
 }
 
-/**
- * Render the Winner screen celebrating the given player.
- * Launches confetti for the coding theme and invokes onRestart when the user returns home.
- */
-export function renderWinner(
-  container: HTMLElement,
-  theme: ThemeName,
-  winner: PlayerColor,
-  onRestart: () => void
-): void {
-  const winnerName = winner === 'blue' ? 'Blue Player' : 'Orange Player';
+type WinnerParts = {
+  subtitle: string;
+  title: string;
+  titleModifier: 'blue' | 'orange' | 'draw';
+  iconHTML: string;
+  iconModifier: 'blue' | 'orange' | 'draw';
+};
 
-  container.innerHTML = `
+/** Returns the icon markup for a draw, pairing blue + orange icons of the given theme. */
+function buildDrawIconHTML(theme: ThemeName): string {
+  const icon = THEME_WINNER_ICON[theme];
+  return `<span class="winner__icon-pair winner__icon-pair--blue">${icon}</span><span class="winner__icon-pair winner__icon-pair--orange">${icon}</span>`;
+}
+
+/** Returns the subtitle/title/icon combination for the given outcome and theme. */
+function buildWinnerParts(theme: ThemeName, outcome: GameOutcome): WinnerParts {
+  if (outcome === 'draw') {
+    return {
+      subtitle: "It's a", title: 'Draw', titleModifier: 'draw',
+      iconHTML: buildDrawIconHTML(theme), iconModifier: 'draw',
+    };
+  }
+  return {
+    subtitle: 'The winner is',
+    title: outcome === 'blue' ? 'Blue Player' : 'Orange Player',
+    titleModifier: outcome,
+    iconHTML: THEME_WINNER_ICON[theme],
+    iconModifier: outcome,
+  };
+}
+
+/** Renders the Winner screen HTML for the given outcome and theme. */
+function buildWinnerTemplate(theme: ThemeName, parts: WinnerParts, btnLabel: string): string {
+  return `
     <main class="winner winner--${theme}">
       <section class="winner__content">
-        <p class="winner__subtitle">The winner is</p>
-        <h1 class="winner__title winner__title--${winner}">${winnerName}</h1>
+        <p class="winner__subtitle">${parts.subtitle}</p>
+        <h1 class="winner__title winner__title--${parts.titleModifier}">${parts.title}</h1>
 
-        <div class="winner__icon winner__icon--${winner}">
-          ${THEME_WINNER_ICON[theme]}
+        <div class="winner__icon winner__icon--${parts.iconModifier}">
+          ${parts.iconHTML}
         </div>
 
-        <button class="winner__btn winner__btn--action" type="button" aria-label="${THEME_BTN_LABEL[theme]}">
-          ${THEME_BTN_LABEL[theme]}
+        <button class="winner__btn winner__btn--action" type="button" aria-label="${btnLabel}">
+          ${btnLabel}
         </button>
       </section>
     </main>
   `;
+}
 
-  const btn = container.querySelector<HTMLButtonElement>('.winner__btn--action');
+/** Returns a confetti teardown for the coding theme (all outcomes), null for other themes. */
+function maybeLaunchConfetti(theme: ThemeName, outcome: GameOutcome): (() => void) | null {
+  if (theme !== 'coding') return null;
+  return launchConfetti(outcome === 'draw' ? DRAW_COLORS : undefined);
+}
 
-  if (theme === 'coding') {
-    const stopConfetti = launchConfetti();
-    btn?.addEventListener('click', () => {
-      stopConfetti();
-      onRestart();
-    });
-  } else {
-    btn?.addEventListener('click', () => onRestart());
-  }
+/**
+ * Render the Winner screen for the given outcome (winner color or draw).
+ * Launches confetti for the coding theme winners and for every draw.
+ */
+export function renderWinner(
+  container: HTMLElement,
+  theme: ThemeName,
+  outcome: GameOutcome,
+  onRestart: () => void
+): void {
+  const parts = buildWinnerParts(theme, outcome);
+  container.innerHTML = buildWinnerTemplate(theme, parts, THEME_BTN_LABEL[theme]);
+  const stopConfetti = maybeLaunchConfetti(theme, outcome);
+  container.querySelector<HTMLButtonElement>('.winner__btn--action')
+    ?.addEventListener('click', () => { stopConfetti?.(); onRestart(); });
 }

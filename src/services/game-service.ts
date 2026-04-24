@@ -1,11 +1,10 @@
-import type { ThemeName, PlayerColor } from '../types/types';
+import type { ThemeName, GameOutcome } from '../types/types';
 import type { Game } from '../models/game';
 import type { Card } from '../models/card';
 
 const FLIP_BACK_DELAY_MS = 1000;
 
-type GameOverCallback = (scores: { blue: number; orange: number }) => void;
-type WinnerCallback = (winner: PlayerColor, scores: { blue: number; orange: number }) => void;
+type EndCallback = (outcome: GameOutcome, scores: { blue: number; orange: number }) => void;
 
 /**
  * Orchestrates gameplay: handles card clicks, match detection, score updates,
@@ -15,8 +14,7 @@ export class GameService {
   private game: Game;
   private container: HTMLElement;
   private theme: ThemeName;
-  private onGameOver: GameOverCallback;
-  private onWinner: WinnerCallback;
+  private onEnd: EndCallback;
   private locked = false;
   private flippedCards: Card[] = [];
 
@@ -24,14 +22,12 @@ export class GameService {
     game: Game,
     container: HTMLElement,
     theme: ThemeName,
-    onGameOver: GameOverCallback,
-    onWinner: WinnerCallback
+    onEnd: EndCallback
   ) {
     this.game = game;
     this.container = container;
     this.theme = theme;
-    this.onGameOver = onGameOver;
-    this.onWinner = onWinner;
+    this.onEnd = onEnd;
   }
 
   /** Handle a card click: flip the card, check for a match once two are face-up. */
@@ -50,6 +46,7 @@ export class GameService {
     }
   }
 
+  /** Compare the two flipped cards and route to success or failure handling. */
   private checkMatch(): void {
     this.locked = true;
     const [first, second] = this.flippedCards;
@@ -61,6 +58,7 @@ export class GameService {
     }
   }
 
+  /** Mark both cards as matched, award a point and check for game end. */
   private handleMatchSuccess(card1: Card, card2: Card): void {
     card1.match();
     card2.match();
@@ -75,6 +73,7 @@ export class GameService {
     this.checkGameEnd();
   }
 
+  /** Flip the two cards face-down and hand the turn to the other player. */
   private handleMatchFailure(card1: Card, card2: Card): void {
     card1.unflip();
     card2.unflip();
@@ -87,6 +86,7 @@ export class GameService {
     this.locked = false;
   }
 
+  /** Sync a card's face-up/face-down state to the DOM. */
   private flipCardDOM(card: Card): void {
     const el = this.container.querySelector<HTMLElement>(`.card[data-id="${card.id}"]`);
     if (!el) return;
@@ -98,12 +98,14 @@ export class GameService {
     }
   }
 
+  /** Add the matched modifier to a card element so it stays face-up. */
   private markCardMatched(card: Card): void {
     const el = this.container.querySelector<HTMLElement>(`.card[data-id="${card.id}"]`);
     if (!el) return;
     el.classList.add('card--matched');
   }
 
+  /** Refresh score numbers in the header, respecting per-theme badge order. */
   private updateScores(): void {
     const [blue, orange] = this.game.players;
     const nums = this.container.querySelectorAll<HTMLElement>('.score-badge__num');
@@ -118,25 +120,22 @@ export class GameService {
     }
   }
 
+  /** Update the current-player badge colour and trigger the pulse animation. */
   private updateCurrentPlayer(): void {
     const box = this.container.querySelector<HTMLElement>('.game__current-box');
     if (!box) return;
     box.classList.remove('game__current-box--blue', 'game__current-box--orange');
     box.classList.add(`game__current-box--${this.game.currentPlayer.color}`);
+    box.classList.remove('game__current-box--pulse');
+    void box.offsetWidth;
+    box.classList.add('game__current-box--pulse');
   }
 
+  /** Fire the end-of-game callback once every card is matched. */
   private checkGameEnd(): void {
     if (!this.game.isOver) return;
-
     const result = this.game.getResult();
     if (!result) return;
-
-    const scores = { blue: result.blueScore, orange: result.orangeScore };
-
-    if (result.isDraw) {
-      this.onGameOver(scores);
-    } else if (result.winner) {
-      this.onWinner(result.winner, scores);
-    }
+    this.onEnd(result.winner, { blue: result.blueScore, orange: result.orangeScore });
   }
 }

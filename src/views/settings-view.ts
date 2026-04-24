@@ -1,11 +1,32 @@
 import type { GameConfig, ThemeName, BoardSize, PlayerColor } from '../types/types';
 
 const THEME_LABELS: Record<ThemeName, string> = {
-  coding: 'Code vibes theme',
-  gaming: 'Gaming theme',
-  daprojects: 'DA Projects theme',
-  foods: 'Foods theme',
+  coding: 'Codes Theme',
+  gaming: 'Games Theme',
+  daprojects: 'DaPro Theme',
+  foods: 'Foods Theme',
 };
+
+/** Returns the human-readable label for the chosen board size. */
+function boardLabel(s: BoardSize): string {
+  return `Board-${s} Cards`;
+}
+
+const FOOTER_MARKER = `
+  <svg class="settings__step-marker" viewBox="138 15 38 61" fill="#F0EA6E" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M143.836 74.828L159.328 69.664L154.164 54.172L138.672 59.336L143.836 74.828ZM173 16.5L171.211 15.6056L147.211 63.6056L149 64.5L150.789 65.3944L174.789 17.3944L173 16.5Z"/>
+  </svg>
+`;
+
+/** Builds the dynamic footer steps showing the current selection. */
+function buildFooterSteps(config: GameConfig): string {
+  const steps = [
+    `<span class="settings__step">${THEME_LABELS[config.theme]}</span>`,
+    `<span class="settings__step settings__step--${config.startingPlayer}">Player</span>`,
+    `<span class="settings__step">${boardLabel(config.boardSize)}</span>`,
+  ];
+  return steps.join(FOOTER_MARKER);
+}
 
 interface PreviewTheme {
   bg: string;
@@ -347,9 +368,11 @@ function renderSettingsLeft(config: GameConfig): string {
   return `
     <div class="settings__left">
       <h1 class="settings__title">Settings${TITLE_UNDERLINE}</h1>
-      ${renderThemeGroup(config)}
-      ${renderPlayerGroup(config)}
-      ${renderSizeGroup(config)}
+      <div class="settings__groups">
+        ${renderThemeGroup(config)}
+        ${renderPlayerGroup(config)}
+        ${renderSizeGroup(config)}
+      </div>
     </div>
   `;
 }
@@ -359,15 +382,18 @@ function renderSettingsRight(config: GameConfig): string {
     <div class="settings__right">
       <div class="settings__preview-wrap">${renderPreview(config.theme, config.startingPlayer)}</div>
       <footer class="settings__footer">
-        <nav class="settings__steps" aria-label="Settings sections">
-          <span class="settings__step">Game theme</span>
-          <span class="settings__step">Player</span>
-          <span class="settings__step">Board size</span>
+        <nav class="settings__steps" aria-label="Current selection">
+          ${buildFooterSteps(config)}
         </nav>
-        <button class="settings__start">${ICON_SMART_DISPLAY}Start</button>
+        <button class="settings__start" type="button" aria-label="Start game">${ICON_SMART_DISPLAY}<span class="settings__start-label">Start</span></button>
       </footer>
     </div>
   `;
+}
+
+function updateFooter(container: HTMLElement, config: GameConfig): void {
+  const steps = container.querySelector('.settings__steps');
+  if (steps) steps.innerHTML = buildFooterSteps(config);
 }
 
 function readConfigFromDOM(container: HTMLElement, config: GameConfig): GameConfig {
@@ -390,15 +416,28 @@ function bindSettingsEvents(
   config: GameConfig,
   onStart: (config: GameConfig) => void
 ): void {
-  container.querySelector('.settings__start')?.addEventListener('click', () => {
-    onStart(readConfigFromDOM(container, config));
+  const startBtn = container.querySelector<HTMLButtonElement>('.settings__start');
+  startBtn?.addEventListener('click', () => {
+    startBtn.classList.add('settings__start--activating');
+    setTimeout(() => onStart(readConfigFromDOM(container, config)), 350);
   });
   container.querySelectorAll('input[type="radio"]').forEach(input => {
     input.addEventListener('change', () => {
       readConfigFromDOM(container, config);
       updatePreview(container, config.theme, config.startingPlayer);
+      updateFooter(container, config);
     });
   });
+}
+
+/** Builds the full Settings screen HTML string for the given config. */
+function buildSettingsTemplate(config: GameConfig): string {
+  return `
+    <main class="settings">
+      ${renderSettingsLeft(config)}
+      ${renderSettingsRight(config)}
+    </main>
+  `;
 }
 
 /**
@@ -410,11 +449,6 @@ export function renderSettings(
   onStart: (config: GameConfig) => void
 ): void {
   const config: GameConfig = { theme: 'coding', boardSize: 16, startingPlayer: 'blue' };
-  container.innerHTML = `
-    <main class="settings">
-      ${renderSettingsLeft(config)}
-      ${renderSettingsRight(config)}
-    </main>
-  `;
+  container.innerHTML = buildSettingsTemplate(config);
   bindSettingsEvents(container, config, onStart);
 }
